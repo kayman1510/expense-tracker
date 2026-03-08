@@ -86,7 +86,7 @@ def get_expenses(
         query += " WHERE expenses.category_id = ?"
         params.append(category_id)
 
-    query += " ORDER BY expenses.id DESC LIMIT ? OFFSET ?"
+    query += " ORDER BY expenses.expense_date DESC, expenses.id DESC LIMIT ? OFFSET ?"
     params.extend([limit, offset])
 
     cursor.execute(query, tuple(params))
@@ -95,6 +95,7 @@ def get_expenses(
     conn.close()
 
     return [dict(row) for row in rows]
+
 
 @router.post("/expenses", response_model=ExpenseCreateResponse)
 def create_expense(expense: ExpenseCreate):
@@ -136,6 +137,7 @@ def delete_expense(expense_id: int):
     conn.close()
 
     return {"message": "Expense deleted successfully"}
+
 
 @router.put("/expenses/{expense_id}", response_model=ExpenseCreateResponse)
 def update_expense(expense_id: int, expense: ExpenseCreate):

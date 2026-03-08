@@ -46,59 +46,60 @@ function AddExpenseForm({ categories, onExpenseAdded }) {
   return (
     <div>
       <form onSubmit={handleSubmit}>
-        <div>
-          <label>Title:</label>
-          <br />
-          <input
-            type="text"
-            value={title}
-            onChange={(event) => setTitle(event.target.value)}
-            required
-          />
+        <div className="form-grid">
+          <div>
+            <label>Title:</label>
+            <input
+              type="text"
+              placeholder="Enter expense title"
+              value={title}
+              onChange={(event) => setTitle(event.target.value)}
+              required
+            />
+          </div>
+
+          <div>
+            <label>Amount:</label>
+            <input
+              type="number"
+              step="0.01"
+              placeholder="0.00"
+              value={amount}
+              onChange={(event) => setAmount(event.target.value)}
+              required
+            />
+          </div>
+
+          <div>
+            <label>Expense Date:</label>
+            <input
+              type="date"
+              value={expenseDate}
+              onChange={(event) => setExpenseDate(event.target.value)}
+              required
+            />
+          </div>
+
+          <div>
+            <label>Category:</label>
+            <select
+              value={categoryId}
+              onChange={(event) => setCategoryId(event.target.value)}
+              required
+            >
+              <option value="">Select a category</option>
+              {categories.map((category) => (
+                <option key={category.id} value={category.id}>
+                  {category.name}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
 
-        <div>
-          <label>Amount:</label>
-          <br />
-          <input
-            type="number"
-            step="0.01"
-            value={amount}
-            onChange={(event) => setAmount(event.target.value)}
-            required
-          />
+        <div className="form-actions">
+          <button type="submit">Add Expense</button>
         </div>
-
-        <div>
-          <label>Expense Date:</label>
-          <br />
-          <input
-            type="date"
-            value={expenseDate}
-            onChange={(event) => setExpenseDate(event.target.value)}
-            required
-          />
-        </div>
-
-        <div>
-          <label>Category:</label>
-          <br />
-          <select
-            value={categoryId}
-            onChange={(event) => setCategoryId(event.target.value)}
-            required
-          >
-            <option value="">Select a category</option>
-            {categories.map((category) => (
-              <option key={category.id} value={category.id}>
-                {category.name}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <br />
-        <button type="submit">Add Expense</button>
       </form>
 
       {error && <p>Error: {error}</p>}

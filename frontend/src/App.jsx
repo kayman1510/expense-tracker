@@ -141,23 +141,43 @@ function App() {
 
       {notification && <p className="notification">{notification}</p>}
 
-      <h2>{editingExpense ? 'Edit Expense' : 'Add Expense'}</h2>
-
-      {!loadingCategories && !categoryError && (
-        editingExpense ? (
-          <EditExpenseForm
-            expense={editingExpense}
-            categories={categories}
-            onExpenseUpdated={handleExpenseUpdated}
-            onCancelEdit={handleCancelEdit}
-          />
-        ) : (
-          <AddExpenseForm
-            categories={categories}
-            onExpenseAdded={handleExpenseAdded}
-          />
-        )
-      )}
+      <div
+        className={
+          editingExpense
+            ? 'expense-form-section editing'
+            : 'expense-form-section'
+        }
+      >
+        {editingExpense && (
+          <div className="edit-section-header">
+            <span className="edit-section-label">
+              Editing: {editingExpense.title}
+            </span>
+            <button
+              type="button"
+              className="cancel-editing-button"
+              onClick={handleCancelEdit}
+            >
+              Cancel editing
+            </button>
+          </div>
+        )}
+        <h2>{editingExpense ? 'Edit Expense' : 'Add Expense'}</h2>
+        {!loadingCategories && !categoryError &&
+          (editingExpense ? (
+            <EditExpenseForm
+              expense={editingExpense}
+              categories={categories}
+              onExpenseUpdated={handleExpenseUpdated}
+              onCancelEdit={handleCancelEdit}
+            />
+          ) : (
+            <AddExpenseForm
+              categories={categories}
+              onExpenseAdded={handleExpenseAdded}
+            />
+          ))}
+      </div>
 
       <h2>Expenses</h2>
 

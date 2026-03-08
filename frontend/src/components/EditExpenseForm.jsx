@@ -5,7 +5,6 @@ function EditExpenseForm({ expense, categories, onExpenseUpdated, onCancelEdit }
   const [amount, setAmount] = useState('')
   const [expenseDate, setExpenseDate] = useState('')
   const [categoryId, setCategoryId] = useState('')
-  const [message, setMessage] = useState('')
   const [error, setError] = useState('')
 
   useEffect(() => {
@@ -20,7 +19,6 @@ function EditExpenseForm({ expense, categories, onExpenseUpdated, onCancelEdit }
   const handleSubmit = async (event) => {
     event.preventDefault()
 
-    setMessage('')
     setError('')
 
     const updatedExpense = {
@@ -43,7 +41,6 @@ function EditExpenseForm({ expense, categories, onExpenseUpdated, onCancelEdit }
         throw new Error('Failed to update expense')
       }
 
-      setMessage('Expense updated successfully')
       onExpenseUpdated()
     } catch (error) {
       setError(error.message)
@@ -56,68 +53,64 @@ function EditExpenseForm({ expense, categories, onExpenseUpdated, onCancelEdit }
 
   return (
     <div>
-      
-
       <form onSubmit={handleSubmit}>
-        <div>
-          <label>Title:</label>
-          <br />
-          <input
-            type="text"
-            value={title}
-            onChange={(event) => setTitle(event.target.value)}
-            required
-          />
+        <div className="form-grid">
+          <div>
+            <label>Title:</label>
+            <input
+              type="text"
+              value={title}
+              onChange={(event) => setTitle(event.target.value)}
+              required
+            />
+          </div>
+
+          <div>
+            <label>Amount:</label>
+            <input
+              type="number"
+              step="0.01"
+              value={amount}
+              onChange={(event) => setAmount(event.target.value)}
+              required
+            />
+          </div>
+
+          <div>
+            <label>Expense Date:</label>
+            <input
+              type="date"
+              value={expenseDate}
+              onChange={(event) => setExpenseDate(event.target.value)}
+              required
+            />
+          </div>
+
+          <div>
+            <label>Category:</label>
+            <select
+              value={categoryId}
+              onChange={(event) => setCategoryId(event.target.value)}
+              required
+            >
+              <option value="">Select a category</option>
+              {categories.map((category) => (
+                <option key={category.id} value={category.id}>
+                  {category.name}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
 
-        <div>
-          <label>Amount:</label>
-          <br />
-          <input
-            type="number"
-            step="0.01"
-            value={amount}
-            onChange={(event) => setAmount(event.target.value)}
-            required
-          />
+        <div className="form-actions action-buttons">
+          <button type="submit">Update Expense</button>
+          <button type="button" onClick={onCancelEdit}>
+            Cancel
+          </button>
         </div>
-
-        <div>
-          <label>Expense Date:</label>
-          <br />
-          <input
-            type="date"
-            value={expenseDate}
-            onChange={(event) => setExpenseDate(event.target.value)}
-            required
-          />
-        </div>
-
-        <div>
-          <label>Category:</label>
-          <br />
-          <select
-            value={categoryId}
-            onChange={(event) => setCategoryId(event.target.value)}
-            required
-          >
-            <option value="">Select a category</option>
-            {categories.map((category) => (
-              <option key={category.id} value={category.id}>
-                {category.name}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <br />
-        <button type="submit">Update Expense</button>
-        <button type="button" onClick={onCancelEdit}>
-          Cancel
-        </button>
       </form>
 
-      {message && <p>{message}</p>}
       {error && <p>Error: {error}</p>}
     </div>
   )
