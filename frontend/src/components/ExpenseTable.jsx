@@ -17,8 +17,10 @@ function ExpenseTable({ expenses, onDeleteExpense, onEditExpense }) {
           <tr key={expense.id}>
             <td>{expense.id}</td>
             <td>{expense.title}</td>
-            <td className="amount-column">{Number(expense.amount).toFixed(2)}</td>
-            <td>{expense.expense_date}</td>
+            <td className="amount-column">
+              {Number(expense.amount).toFixed(2)}
+            </td>
+            <td>{new Date(expense.expense_date).toLocaleDateString()}</td>
             <td>{expense.category_name}</td>
 
             <td>

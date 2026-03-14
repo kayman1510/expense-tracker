@@ -6,11 +6,13 @@ function AddExpenseForm({ categories, onExpenseAdded }) {
   const [expenseDate, setExpenseDate] = useState('')
   const [categoryId, setCategoryId] = useState('')
   const [error, setError] = useState('')
+  const [submitting, setSubmitting] = useState(false)
 
   const handleSubmit = async (event) => {
     event.preventDefault()
 
     setError('')
+    setSubmitting(true)
 
     const expenseData = {
       title: title,
@@ -40,6 +42,8 @@ function AddExpenseForm({ categories, onExpenseAdded }) {
       setCategoryId('')
     } catch (error) {
       setError(error.message)
+    } finally {
+      setSubmitting(false)
     }
   }
 
@@ -98,7 +102,9 @@ function AddExpenseForm({ categories, onExpenseAdded }) {
         </div>
 
         <div className="form-actions">
-          <button type="submit">Add Expense</button>
+          <button type="submit" disabled={submitting}>
+            {submitting ? 'Adding...' : 'Add Expense'}
+          </button>
         </div>
       </form>
 

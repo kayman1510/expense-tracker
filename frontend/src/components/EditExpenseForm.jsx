@@ -6,6 +6,7 @@ function EditExpenseForm({ expense, categories, onExpenseUpdated, onCancelEdit }
   const [expenseDate, setExpenseDate] = useState('')
   const [categoryId, setCategoryId] = useState('')
   const [error, setError] = useState('')
+  const [submitting, setSubmitting] = useState(false)
 
   useEffect(() => {
     if (expense) {
@@ -20,6 +21,7 @@ function EditExpenseForm({ expense, categories, onExpenseUpdated, onCancelEdit }
     event.preventDefault()
 
     setError('')
+    setSubmitting(true)
 
     const updatedExpense = {
       title: title,
@@ -44,6 +46,8 @@ function EditExpenseForm({ expense, categories, onExpenseUpdated, onCancelEdit }
       onExpenseUpdated()
     } catch (error) {
       setError(error.message)
+    } finally {
+      setSubmitting(false)
     }
   }
 
@@ -104,7 +108,9 @@ function EditExpenseForm({ expense, categories, onExpenseUpdated, onCancelEdit }
         </div>
 
         <div className="form-actions action-buttons">
-          <button type="submit">Update Expense</button>
+          <button type="submit" disabled={submitting}>
+            {submitting ? 'Updating...' : 'Update Expense'}
+          </button>
           <button type="button" onClick={onCancelEdit}>
             Cancel
           </button>
