@@ -74,3 +74,52 @@ def get_category_spending(month: int, year: int):
         }
         for row in rows
     ]
+
+def get_budget_vs_actual(month: int, year: int):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        SELECT
+            budgets.category_id AS category_id,
+            categories.name AS category_name,
+            budgets.amount AS budget_amount,
+            COALESCE(SUM(expenses.amount), 0) AS actual_spent
+        FROM budgets
+        JOIN categories ON budgets.category_id = categories.id
+        LEFT JOIN expenses
+            ON expenses.category_id = budgets.category_id
+           AND strftime('%m', expenses.expense_date) = ?
+           AND strftime('%Y', expenses.expense_date) = ?
+        WHERE budgets.period_month = ?
+          AND budgets.period_year = ?
+        GROUP BY budgets.category_id, categories.name, budgets.amount
+        ORDER BY categories.name ASC
+        """,
+        (f"{month:02d}", str(year), month, year),
+    )
+
+    rows = cursor.fetchall()
+    conn.close()
+
+    results = []
+
+    for row in rows:
+        budget_amount = row["budget_amount"]
+        actual_spent = row["actual_spent"]
+        remaining_amount = budget_amount - actual_spent
+        over_budget = actual_spent > budget_amount
+
+        results.append(
+            {
+                "category_id": row["category_id"],
+                "category_name": row["category_name"],
+                "budget_amount": budget_amount,
+                "actual_spent": actual_spent,
+                "remaining_amount": remaining_amount,
+                "over_budget": over_budget,
+            }
+        )
+
+    return results

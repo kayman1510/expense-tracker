@@ -98,3 +98,11 @@ class CategorySpendingItem(BaseModel):
     category_id: int
     category_name: str
     total_spent: float
+
+class BudgetVsActualItem(BaseModel):
+    category_id: int
+    category_name: str
+    budget_amount: float
+    actual_spent: float
+    remaining_amount: float
+    over_budget: bool
