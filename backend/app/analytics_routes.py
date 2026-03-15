@@ -1,9 +1,15 @@
 from fastapi import APIRouter, Query
-from app.models import MonthlySummaryResponse, CategorySpendingItem, BudgetVsActualItem
+from app.models import (
+    MonthlySummaryResponse,
+    CategorySpendingItem,
+    BudgetVsActualItem,
+    MonthOverMonthResponse,
+)
 from app.services.analytics_service import (
     get_monthly_summary,
     get_category_spending,
     get_budget_vs_actual,
+    get_month_over_month,
 )
 
 router = APIRouter(prefix="/analytics", tags=["Analytics"])
@@ -29,3 +35,10 @@ def budget_vs_actual(
     year: int = Query(..., ge=2000, le=2100),
 ):
     return get_budget_vs_actual(month, year)
+
+@router.get("/month-over-month", response_model=MonthOverMonthResponse)
+def month_over_month(
+    month: int = Query(..., ge=1, le=12),
+    year: int = Query(..., ge=2000, le=2100),
+):
+    return get_month_over_month(month, year)

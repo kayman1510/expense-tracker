@@ -123,3 +123,40 @@ def get_budget_vs_actual(month: int, year: int):
         )
 
     return results
+
+def get_month_over_month(month: int, year: int):
+    if month == 1:
+        previous_month = 12
+        previous_year = year - 1
+    else:
+        previous_month = month - 1
+        previous_year = year
+
+    current_summary = get_monthly_summary(month, year)
+    previous_summary = get_monthly_summary(previous_month, previous_year)
+
+    current_month_income = current_summary["total_income"]
+    previous_month_income = previous_summary["total_income"]
+    income_change = current_month_income - previous_month_income
+
+    current_month_expenses = current_summary["total_expenses"]
+    previous_month_expenses = previous_summary["total_expenses"]
+    expense_change = current_month_expenses - previous_month_expenses
+
+    current_month_savings = current_summary["net_savings"]
+    previous_month_savings = previous_summary["net_savings"]
+    savings_change = current_month_savings - previous_month_savings
+
+    return {
+        "month": month,
+        "year": year,
+        "current_month_income": current_month_income,
+        "previous_month_income": previous_month_income,
+        "income_change": income_change,
+        "current_month_expenses": current_month_expenses,
+        "previous_month_expenses": previous_month_expenses,
+        "expense_change": expense_change,
+        "current_month_savings": current_month_savings,
+        "previous_month_savings": previous_month_savings,
+        "savings_change": savings_change,
+    }

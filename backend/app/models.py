@@ -106,3 +106,19 @@ class BudgetVsActualItem(BaseModel):
     actual_spent: float
     remaining_amount: float
     over_budget: bool
+
+class MonthOverMonthResponse(BaseModel):
+    month: int
+    year: int
+
+    current_month_income: float
+    previous_month_income: float
+    income_change: float
+
+    current_month_expenses: float
+    previous_month_expenses: float
+    expense_change: float
+
+    current_month_savings: float
+    previous_month_savings: float
+    savings_change: float
