@@ -86,3 +86,10 @@ class BudgetCreateResponse(BaseModel):
     period_month: int
     period_year: int
     created_at: str
+
+class MonthlySummaryResponse(BaseModel):
+    month: int
+    year: int
+    total_income: float
+    total_expenses: float
+    net_savings: float
