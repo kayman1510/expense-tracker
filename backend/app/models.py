@@ -93,3 +93,8 @@ class MonthlySummaryResponse(BaseModel):
     total_income: float
     total_expenses: float
     net_savings: float
+
+class CategorySpendingItem(BaseModel):
+    category_id: int
+    category_name: str
+    total_spent: float
