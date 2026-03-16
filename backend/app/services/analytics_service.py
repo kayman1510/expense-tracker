@@ -1,5 +1,5 @@
 from app.database import get_db_connection
-
+from app.models import DashboardResponse
 
 def get_monthly_summary(month: int, year: int):
     conn = get_db_connection()
@@ -160,3 +160,17 @@ def get_month_over_month(month: int, year: int):
         "previous_month_savings": previous_month_savings,
         "savings_change": savings_change,
     }
+
+
+def get_dashboard_data(month: int, year: int) -> DashboardResponse:
+    summary = get_monthly_summary(month, year)
+    category_spending = get_category_spending(month, year)
+    budget_status = get_budget_vs_actual(month, year)
+    month_comparison = get_month_over_month(month, year)
+
+    return DashboardResponse(
+        summary=summary,
+        category_spending=category_spending,
+        budget_status=budget_status,
+        month_comparison=month_comparison,
+    )

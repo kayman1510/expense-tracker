@@ -122,3 +122,10 @@ class MonthOverMonthResponse(BaseModel):
     current_month_savings: float
     previous_month_savings: float
     savings_change: float
+
+class DashboardResponse(BaseModel):
+    summary: MonthlySummaryResponse
+    category_spending: list[CategorySpendingItem]
+    budget_status: list[BudgetVsActualItem]
+    month_comparison: MonthOverMonthResponse
+    

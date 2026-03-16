@@ -572,4 +572,12 @@ tr:nth-child(even) td {
   .form-grid {
     grid-template-columns: 1fr;
   }
+
+  body {
+  background: #f6f8fb;
+  }
+
+.app-container {
+  min-height: 100vh;
+  }
 }

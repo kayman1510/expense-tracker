@@ -4,12 +4,14 @@ from app.models import (
     CategorySpendingItem,
     BudgetVsActualItem,
     MonthOverMonthResponse,
+    DashboardResponse,
 )
 from app.services.analytics_service import (
     get_monthly_summary,
     get_category_spending,
     get_budget_vs_actual,
     get_month_over_month,
+    get_dashboard_data,
 )
 
 router = APIRouter(prefix="/analytics", tags=["Analytics"])
@@ -42,3 +44,8 @@ def month_over_month(
     year: int = Query(..., ge=2000, le=2100),
 ):
     return get_month_over_month(month, year)
+
+@router.get("/dashboard", response_model=DashboardResponse)
+def get_dashboard(month: int, year: int):
+    return get_dashboard_data(month, year)
+
