@@ -17,6 +17,9 @@ from app.models import (
 
 router = APIRouter()
 
+
+# ------------------ CATEGORIES ------------------
+
 @router.get("/categories", response_model=list[CategoryResponse])
 def get_categories():
     conn = get_db_connection()
@@ -61,6 +64,8 @@ def create_category(category: CategoryCreate):
         conn.close()
         raise HTTPException(status_code=400, detail="Category already exists or could not be created")
 
+
+# ------------------ EXPENSES ------------------
 
 @router.get("/expenses", response_model=list[ExpenseResponse])
 def get_expenses(
@@ -127,22 +132,6 @@ def create_expense(expense: ExpenseCreate):
     return dict(row)
 
 
-@router.delete("/expenses/{expense_id}")
-def delete_expense(expense_id: int):
-    conn = get_db_connection()
-    cursor = conn.cursor()
-
-    cursor.execute(
-        "DELETE FROM expenses WHERE id = ?",
-        (expense_id,)
-    )
-
-    conn.commit()
-    conn.close()
-
-    return {"message": "Expense deleted successfully"}
-
-
 @router.put("/expenses/{expense_id}", response_model=ExpenseCreateResponse)
 def update_expense(expense_id: int, expense: ExpenseCreate):
     conn = get_db_connection()
@@ -174,6 +163,24 @@ def update_expense(expense_id: int, expense: ExpenseCreate):
     conn.close()
     return dict(row)
 
+
+@router.delete("/expenses/{expense_id}")
+def delete_expense(expense_id: int):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "DELETE FROM expenses WHERE id = ?",
+        (expense_id,)
+    )
+
+    conn.commit()
+    conn.close()
+
+    return {"message": "Expense deleted successfully"}
+
+
+# ------------------ INCOME ------------------
 
 @router.get("/income", response_model=list[IncomeResponse])
 def get_income():
@@ -259,6 +266,14 @@ def delete_income(income_id: int):
         (income_id,)
     )
 
+    conn.commit()
+    conn.close()
+
+    return {"message": "Income deleted successfully"}
+
+
+# ------------------ BUDGETS ------------------
+
 @router.get("/budgets", response_model=list[BudgetResponse])
 def get_budgets():
     conn = get_db_connection()
@@ -282,6 +297,7 @@ def get_budgets():
     conn.close()
 
     return [dict(row) for row in rows]
+
 
 @router.post("/budgets", response_model=BudgetCreateResponse)
 def create_budget(budget: BudgetCreate):
@@ -321,6 +337,7 @@ def create_budget(budget: BudgetCreate):
             detail="Budget for this category and month already exists or could not be created"
         )
 
+
 @router.put("/budgets/{budget_id}", response_model=BudgetCreateResponse)
 def update_budget(budget_id: int, budget: BudgetCreate):
     conn = get_db_connection()
@@ -352,6 +369,7 @@ def update_budget(budget_id: int, budget: BudgetCreate):
     conn.close()
     return dict(row)
 
+
 @router.delete("/budgets/{budget_id}")
 def delete_budget(budget_id: int):
     conn = get_db_connection()
@@ -366,8 +384,3 @@ def delete_budget(budget_id: int):
     conn.close()
 
     return {"message": "Budget deleted successfully"}
-
-    conn.commit()
-    conn.close()
-
-    return {"message": "Income deleted successfully"}

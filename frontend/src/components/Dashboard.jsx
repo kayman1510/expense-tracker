@@ -53,8 +53,6 @@ function Dashboard() {
   return (
     <div
       style={{
-        maxWidth: '1100px',
-        margin: '40px auto',
         padding: '0 20px',
       }}
     >

@@ -1,11 +1,22 @@
-import Dashboard from './components/Dashboard'
-import './App.css'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import AppLayout from './layout/AppLayout'
+import DashboardPage from './pages/DashboardPage'
+import ExpensesPage from './pages/ExpensesPage'
+import BudgetsPage from './pages/BudgetsPage'
+import IncomePage from './pages/IncomePage'
 
 function App() {
   return (
-    <div className="app-container">
-      <Dashboard />
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<AppLayout />}>
+          <Route index element={<DashboardPage />} />
+          <Route path="expenses" element={<ExpensesPage />} />
+          <Route path="budgets" element={<BudgetsPage />} />
+          <Route path="income" element={<IncomePage />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   )
 }
 
