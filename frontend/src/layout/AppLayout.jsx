@@ -1,53 +1,55 @@
 import { NavLink, Outlet } from 'react-router-dom'
 
 function AppLayout() {
-  const getNavLinkStyle = ({ isActive }) => {
-    return {
-      padding: '10px 16px',
-      borderRadius: '8px',
-      textDecoration: 'none',
-      fontWeight: '600',
-      color: isActive ? '#ffffff' : '#1f2937',
-      backgroundColor: isActive ? '#2563eb' : '#e5e7eb',
-    }
-  }
+  const getNavLinkStyle = ({ isActive }) => ({
+    padding: '6px 12px',
+    borderRadius: '6px',
+    textDecoration: 'none',
+    fontSize: '13px',
+    fontWeight: isActive ? '600' : '400',
+    color: isActive ? '#f1f5f9' : 'rgba(255,255,255,0.42)',
+    backgroundColor: isActive ? 'rgba(255,255,255,0.09)' : 'transparent',
+    letterSpacing: isActive ? '0' : '0.01em',
+    transition: 'color 0.15s, background-color 0.15s',
+  })
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: '#f8fafc' }}>
-      <header
-        style={{
-          padding: '16px 24px',
-          borderBottom: '1px solid #e5e7eb',
-          backgroundColor: '#ffffff',
-        }}
-      >
-        <h1 style={{ margin: 0, fontSize: '24px' }}>Expense Tracker</h1>
-      </header>
+    <div style={{ minHeight: '100vh', backgroundColor: '#f1f5f9' }}>
 
-      <nav
+      {/* Top navigation bar */}
+      <div
         style={{
+          background: '#0f172a',
+          borderBottom: '1px solid rgba(255,255,255,0.06)',
+          padding: '0 36px',
           display: 'flex',
-          gap: '12px',
-          padding: '16px 24px',
-          backgroundColor: '#ffffff',
-          borderBottom: '1px solid #e5e7eb',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          height: '48px',
         }}
       >
-        <NavLink to="/" end style={getNavLinkStyle}>
-          Dashboard
-        </NavLink>
-        <NavLink to="/expenses" style={getNavLinkStyle}>
-          Expenses
-        </NavLink>
-        <NavLink to="/budgets" style={getNavLinkStyle}>
-          Budgets
-        </NavLink>
-        <NavLink to="/income" style={getNavLinkStyle}>
-          Income
-        </NavLink>
-      </nav>
+        {/* Brand */}
+        <span
+          style={{
+            fontSize: '14px',
+            fontWeight: '700',
+            color: '#f1f5f9',
+            letterSpacing: '-0.01em',
+          }}
+        >
+          Expense Tracker
+        </span>
 
-      <main style={{ padding: '24px' }}>
+        {/* Nav links */}
+        <nav style={{ display: 'flex', gap: '2px' }}>
+          <NavLink to="/" end style={getNavLinkStyle}>Dashboard</NavLink>
+          <NavLink to="/expenses" style={getNavLinkStyle}>Expenses</NavLink>
+          <NavLink to="/budgets" style={getNavLinkStyle}>Budgets</NavLink>
+          <NavLink to="/income" style={getNavLinkStyle}>Income</NavLink>
+        </nav>
+      </div>
+
+      <main>
         <Outlet />
       </main>
     </div>

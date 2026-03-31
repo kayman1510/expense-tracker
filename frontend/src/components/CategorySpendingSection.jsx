@@ -1,4 +1,15 @@
+const BAR_COLORS = [
+  '#2563eb',
+  '#0d9488',
+  '#7c3aed',
+  '#ea580c',
+  '#059669',
+  '#be185d',
+]
+
 function CategorySpendingSection({ categorySpending }) {
+  const totalSpent = categorySpending.reduce((sum, item) => sum + item.total_spent, 0)
+
   const maxSpent =
     categorySpending.length > 0
       ? Math.max(...categorySpending.map((item) => item.total_spent))
@@ -8,40 +19,69 @@ function CategorySpendingSection({ categorySpending }) {
     <section
       style={{
         background: '#ffffff',
-        borderRadius: '14px',
-        padding: '22px',
-        boxShadow: '0 6px 16px rgba(0,0,0,0.06)',
+        borderRadius: '12px',
+        padding: '28px 32px',
+        boxShadow: '0 1px 4px rgba(0,0,0,0.06)',
       }}
     >
-      <h3 style={{ marginTop: 0, marginBottom: '18px' }}>Category Spending</h3>
+      <div style={{ marginBottom: '24px' }}>
+        <h3 style={{ margin: '0 0 4px 0', fontSize: '16px', fontWeight: '600', color: '#0f172a' }}>
+          Category Spending
+        </h3>
+        <p style={{ margin: 0, fontSize: '13px', color: '#94a3b8', fontWeight: '400' }}>
+          Breakdown by category for the selected period
+        </p>
+      </div>
 
       {categorySpending.length === 0 ? (
-        <p>No category spending data available.</p>
+        <p style={{ margin: 0, color: '#94a3b8', fontSize: '14px' }}>
+          No spending data available for this period.
+        </p>
       ) : (
-        <div style={{ display: 'grid', gap: '14px' }}>
+        <div style={{ display: 'grid', gap: '20px' }}>
           {categorySpending.map((item, index) => {
             const widthPercent = (item.total_spent / maxSpent) * 100
+            const sharePercent = totalSpent > 0
+              ? ((item.total_spent / totalSpent) * 100).toFixed(1)
+              : '0.0'
+            const color = BAR_COLORS[index % BAR_COLORS.length]
 
             return (
               <div key={item.category_id}>
+                {/* Label row */}
                 <div
                   style={{
                     display: 'flex',
                     justifyContent: 'space-between',
-                    marginBottom: '6px',
-                    fontSize: '14px',
-                    fontWeight: '500',
+                    alignItems: 'baseline',
+                    marginBottom: '8px',
                   }}
                 >
-                  <span>{item.category_name}</span>
-                  <span>{item.total_spent}</span>
+                  <span
+                    style={{
+                      fontSize: '14px',
+                      fontWeight: '600',
+                      color: '#1e293b',
+                    }}
+                  >
+                    {item.category_name}
+                  </span>
+                  <span style={{ display: 'flex', gap: '8px', alignItems: 'baseline' }}>
+                    <span style={{ fontSize: '14px', fontWeight: '600', color: '#1e293b' }}>
+                      {item.total_spent}
+                    </span>
+                    <span style={{ fontSize: '12px', fontWeight: '500', color: '#94a3b8' }}>
+                      {sharePercent}%
+                    </span>
+                  </span>
                 </div>
 
+                {/* Bar track */}
                 <div
                   style={{
                     width: '100%',
-                    height: '12px',
-                    background: '#f1f3f5',
+                    height: '10px',
+                    background: '#f1f5f9',
                     borderRadius: '999px',
                     overflow: 'hidden',
                   }}
@@ -51,12 +91,7 @@ function CategorySpendingSection({ categorySpending }) {
                       width: `${widthPercent}%`,
                       height: '100%',
                       borderRadius: '999px',
-                      background:
-                        index % 3 === 0
-                          ? 'linear-gradient(135deg, #f6d365, #fda085)'
-                          : index % 3 === 1
-                          ? 'linear-gradient(135deg, #84fab0, #8fd3f4)'
-                          : 'linear-gradient(135deg, #a18cd1, #fbc2eb)',
+                      background: color,
                     }}
                   />
                 </div>

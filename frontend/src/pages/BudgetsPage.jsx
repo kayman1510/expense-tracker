@@ -2,6 +2,20 @@ import { useEffect, useState } from 'react'
 import { API_BASE_URL } from '../config/api'
 import '../App.css'
 
+const sectionStyle = {
+  background: '#ffffff',
+  borderRadius: '12px',
+  padding: '28px 32px',
+  boxShadow: '0 1px 4px rgba(0,0,0,0.06)',
+}
+
+const sectionHeadingStyle = {
+  margin: '0 0 20px 0',
+  fontSize: '16px',
+  fontWeight: '600',
+  color: '#0f172a',
+}
+
 function BudgetsPage() {
   const [budgets, setBudgets] = useState([])
   const [categories, setCategories] = useState([])
@@ -15,14 +29,12 @@ function BudgetsPage() {
   const [error, setError] = useState('')
   const [message, setMessage] = useState('')
 
-  // Fetch categories
   useEffect(() => {
     fetch(`${API_BASE_URL}/categories`)
       .then(res => res.json())
       .then(data => setCategories(data))
   }, [])
 
-  // Fetch budgets
   const fetchBudgets = () => {
     setLoading(true)
     fetch(`${API_BASE_URL}/budgets`)
@@ -40,14 +52,10 @@ function BudgetsPage() {
       })
   }
 
-  useEffect(() => {
-    fetchBudgets()
-  }, [])
+  useEffect(() => { fetchBudgets() }, [])
 
-  // Create budget
   const handleSubmit = async (e) => {
     e.preventDefault()
-
     setMessage('')
     setError('')
 
@@ -69,28 +77,21 @@ function BudgetsPage() {
       }
 
       setMessage('Budget created successfully')
-
-      // reset form
       setAmount('')
       setCategoryId('')
       setMonth('')
       setYear('')
-
       fetchBudgets()
-
     } catch (err) {
       setError(err.message)
     }
   }
 
-  // Delete budget
   const handleDelete = async (id) => {
     if (!window.confirm('Delete this budget?')) return
 
     try {
-      await fetch(`${API_BASE_URL}/budgets/${id}`, {
-        method: 'DELETE',
-      })
+      await fetch(`${API_BASE_URL}/budgets/${id}`, { method: 'DELETE' })
       fetchBudgets()
     } catch (err) {
       setError('Failed to delete budget')
@@ -98,99 +99,127 @@ function BudgetsPage() {
   }
 
   return (
-    <div className="app-container">
-      <header className="hero">
-        <h1 className="hero-title">Budgets</h1>
-        <p className="hero-subtitle">Set and track monthly limits</p>
-      </header>
+    <div style={{ background: '#f1f5f9', minHeight: '100%' }}>
 
-      {message && <p className="notification">{message}</p>}
-      {error && <p>Error: {error}</p>}
+      {/* Dark header band */}
+      <div style={{ background: '#0f172a', padding: '20px 36px' }}>
+        <h1 style={{ margin: '0 0 3px 0', fontSize: '20px', fontWeight: '700', color: '#ffffff', letterSpacing: '-0.01em' }}>
+          Budgets
+        </h1>
+        <p style={{ margin: 0, fontSize: '13px', color: 'rgba(255,255,255,0.38)', fontWeight: '400' }}>
+          Set and track monthly spending limits
+        </p>
+      </div>
 
-      {/* Form */}
-      <section className="section-card">
-        <h2>Add Budget</h2>
+      {/* Content area */}
+      <div style={{ padding: '32px 36px 48px', display: 'grid', gap: '24px' }}>
 
-        <form onSubmit={handleSubmit} className="form-row">
+        {message && <p className="notification">{message}</p>}
+        {error && <p style={{ margin: 0, color: '#dc2626', fontSize: '14px' }}>Error: {error}</p>}
 
-          <select
-            value={categoryId}
-            onChange={(e) => setCategoryId(e.target.value)}
-            required
-          >
-            <option value="">Select Category</option>
-            {categories.map(c => (
-              <option key={c.id} value={c.id}>{c.name}</option>
-            ))}
-          </select>
+        {/* Add budget form */}
+        <section style={sectionStyle}>
+          <h3 style={sectionHeadingStyle}>Add Budget</h3>
 
-          <input
-            type="number"
-            placeholder="Amount"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-            required
-          />
+          <form onSubmit={handleSubmit}>
+            <div className="form-grid">
+              <div>
+                <label>Category</label>
+                <select
+                  value={categoryId}
+                  onChange={(e) => setCategoryId(e.target.value)}
+                  required
+                >
+                  <option value="">Select category</option>
+                  {categories.map(c => (
+                    <option key={c.id} value={c.id}>{c.name}</option>
+                  ))}
+                </select>
+              </div>
 
-          <input
-            type="number"
-            placeholder="Month (1-12)"
-            value={month}
-            onChange={(e) => setMonth(e.target.value)}
-            required
-          />
+              <div>
+                <label>Amount</label>
+                <input
+                  type="number"
+                  placeholder="0.00"
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                  required
+                />
+              </div>
 
-          <input
-            type="number"
-            placeholder="Year (2026)"
-            value={year}
-            onChange={(e) => setYear(e.target.value)}
-            required
-          />
+              <div>
+                <label>Month (1–12)</label>
+                <input
+                  type="number"
+                  placeholder="e.g. 3"
+                  value={month}
+                  onChange={(e) => setMonth(e.target.value)}
+                  required
+                />
+              </div>
 
-          <button type="submit">Add</button>
-        </form>
-      </section>
+              <div>
+                <label>Year</label>
+                <input
+                  type="number"
+                  placeholder="e.g. 2026"
+                  value={year}
+                  onChange={(e) => setYear(e.target.value)}
+                  required
+                />
+              </div>
+            </div>
 
-      {/* Table */}
-      <section className="section-card">
-        <h2>Budget List</h2>
+            <div className="form-actions">
+              <button type="submit">Add Budget</button>
+            </div>
+          </form>
+        </section>
 
-        {loading && <p>Loading...</p>}
+        {/* Budget list */}
+        <section style={sectionStyle}>
+          <h3 style={sectionHeadingStyle}>Budget List</h3>
 
-        {!loading && budgets.length === 0 && (
-          <p>No budgets found</p>
-        )}
+          {loading && <p style={{ color: '#64748b' }}>Loading...</p>}
 
-        {!loading && budgets.length > 0 && (
-          <table className="expense-table">
-            <thead>
-              <tr>
-                <th>Category</th>
-                <th>Amount</th>
-                <th>Month</th>
-                <th>Year</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {budgets.map(b => (
-                <tr key={b.id}>
-                  <td>{b.category_name}</td>
-                  <td>{b.amount}</td>
-                  <td>{b.period_month}</td>
-                  <td>{b.period_year}</td>
-                  <td>
-                    <button onClick={() => handleDelete(b.id)}>
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-      </section>
+          {!loading && budgets.length === 0 && (
+            <p style={{ color: '#94a3b8', margin: 0 }}>No budgets found.</p>
+          )}
+
+          {!loading && budgets.length > 0 && (
+            <div className="table-container">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Category</th>
+                    <th>Amount</th>
+                    <th>Month</th>
+                    <th>Year</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {budgets.map(b => (
+                    <tr key={b.id}>
+                      <td>{b.category_name}</td>
+                      <td>{b.amount}</td>
+                      <td>{b.period_month}</td>
+                      <td>{b.period_year}</td>
+                      <td>
+                        <button className="delete-button" onClick={() => handleDelete(b.id)}>
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </section>
+
+      </div>
     </div>
   )
 }

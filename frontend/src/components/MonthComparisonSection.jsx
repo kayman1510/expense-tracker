@@ -1,5 +1,5 @@
 function MonthComparisonSection({ monthComparison }) {
-  const comparisonCards = [
+  const cards = [
     {
       title: 'Income',
       current: monthComparison.current_month_income,
@@ -24,12 +24,19 @@ function MonthComparisonSection({ monthComparison }) {
     <section
       style={{
         background: '#ffffff',
-        borderRadius: '14px',
-        padding: '22px',
-        boxShadow: '0 6px 16px rgba(0,0,0,0.06)',
+        borderRadius: '12px',
+        padding: '28px 32px',
+        boxShadow: '0 1px 4px rgba(0,0,0,0.06)',
       }}
     >
-      <h3 style={{ marginTop: 0, marginBottom: '18px' }}>Month Comparison</h3>
+      <div style={{ marginBottom: '24px' }}>
+        <h3 style={{ margin: '0 0 4px 0', fontSize: '16px', fontWeight: '600', color: '#0f172a' }}>
+          Month Comparison
+        </h3>
+        <p style={{ margin: 0, fontSize: '13px', color: '#94a3b8', fontWeight: '400' }}>
+          Current month vs previous month
+        </p>
+      </div>
 
       <div
         style={{
@@ -38,37 +45,98 @@ function MonthComparisonSection({ monthComparison }) {
           gap: '16px',
         }}
       >
-        {comparisonCards.map((card) => {
+        {cards.map((card) => {
           const isPositive = card.change >= 0
+          const statusColor = isPositive ? '#16a34a' : '#dc2626'
+          const topBorderColor = isPositive ? '#16a34a' : '#dc2626'
+          const changeBg = isPositive ? '#f0fdf4' : '#fef2f2'
+          const arrow = isPositive ? '↑' : '↓'
 
           return (
             <div
               key={card.title}
               style={{
-                border: '1px solid #e9ecef',
-                borderRadius: '12px',
-                padding: '18px',
-                background: '#fafbfc',
+                background: '#ffffff',
+                border: '1px solid #e2e8f0',
+                borderTop: `3px solid ${topBorderColor}`,
+                borderRadius: '10px',
+                padding: '20px 22px',
               }}
             >
-              <h4 style={{ marginTop: 0, marginBottom: '14px' }}>{card.title}</h4>
+              {/* Card title */}
+              <span
+                style={{
+                  display: 'block',
+                  fontSize: '11px',
+                  fontWeight: '600',
+                  letterSpacing: '0.07em',
+                  textTransform: 'uppercase',
+                  color: '#94a3b8',
+                  marginBottom: '12px',
+                }}
+              >
+                {card.title}
+              </span>
 
-              <div style={{ display: 'grid', gap: '8px', fontSize: '14px' }}>
-                <p style={{ margin: 0 }}>
-                  <strong>Current:</strong> {card.current}
-                </p>
-                <p style={{ margin: 0 }}>
-                  <strong>Previous:</strong> {card.previous}
-                </p>
-                <p
-                  style={{
-                    margin: 0,
-                    fontWeight: '600',
-                    color: isPositive ? '#2b8a3e' : '#c92a2a',
-                  }}
-                >
-                  <strong>Change:</strong> {card.change}
-                </p>
+              {/* Change hero */}
+              <div
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  background: changeBg,
+                  borderRadius: '6px',
+                  padding: '5px 10px',
+                  marginBottom: '16px',
+                }}
+              >
+                <span style={{ fontSize: '15px', fontWeight: '700', color: statusColor }}>
+                  {arrow}
+                </span>
+                <span style={{ fontSize: '15px', fontWeight: '700', color: statusColor }}>
+                  {card.change}
+                </span>
+              </div>
+
+              {/* Current + Previous values */}
+              <div style={{ display: 'grid', gap: '10px' }}>
+                <div>
+                  <span
+                    style={{
+                      display: 'block',
+                      fontSize: '10px',
+                      fontWeight: '600',
+                      letterSpacing: '0.07em',
+                      textTransform: 'uppercase',
+                      color: '#94a3b8',
+                      marginBottom: '2px',
+                    }}
+                  >
+                    Current
+                  </span>
+                  <span style={{ fontSize: '20px', fontWeight: '700', color: '#0f172a', lineHeight: 1 }}>
+                    {card.current}
+                  </span>
+                </div>
+
+                <div>
+                  <span
+                    style={{
+                      display: 'block',
+                      fontSize: '10px',
+                      fontWeight: '600',
+                      letterSpacing: '0.07em',
+                      textTransform: 'uppercase',
+                      color: '#94a3b8',
+                      marginBottom: '2px',
+                    }}
+                  >
+                    Previous
+                  </span>
+                  <span style={{ fontSize: '14px', fontWeight: '500', color: '#64748b', lineHeight: 1 }}>
+                    {card.previous}
+                  </span>
+                </div>
               </div>
             </div>
           )
