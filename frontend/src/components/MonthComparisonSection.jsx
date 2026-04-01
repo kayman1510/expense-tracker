@@ -1,3 +1,5 @@
+import { formatCurrency } from '../utils/formatCurrency'
+
 function MonthComparisonSection({ monthComparison }) {
   const cards = [
     {
@@ -94,7 +96,7 @@ function MonthComparisonSection({ monthComparison }) {
                   {arrow}
                 </span>
                 <span style={{ fontSize: '15px', fontWeight: '700', color: statusColor }}>
-                  {card.change}
+                  {formatCurrency(Math.abs(card.change))}
                 </span>
               </div>
 
@@ -115,7 +117,7 @@ function MonthComparisonSection({ monthComparison }) {
                     Current
                   </span>
                   <span style={{ fontSize: '20px', fontWeight: '700', color: '#0f172a', lineHeight: 1 }}>
-                    {card.current}
+                    {formatCurrency(card.current)}
                   </span>
                 </div>
 
@@ -134,7 +136,7 @@ function MonthComparisonSection({ monthComparison }) {
                     Previous
                   </span>
                   <span style={{ fontSize: '14px', fontWeight: '500', color: '#64748b', lineHeight: 1 }}>
-                    {card.previous}
+                    {formatCurrency(card.previous)}
                   </span>
                 </div>
               </div>

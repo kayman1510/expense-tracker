@@ -1,3 +1,5 @@
+import { formatCurrency } from '../utils/formatCurrency'
+
 const BAR_COLORS = [
   '#2563eb',
   '#0d9488',
@@ -35,7 +37,7 @@ function CategorySpendingSection({ categorySpending }) {
 
       {categorySpending.length === 0 ? (
         <p style={{ margin: 0, color: '#94a3b8', fontSize: '14px' }}>
-          No spending data available for this period.
+          No spending data for this period.
         </p>
       ) : (
         <div style={{ display: 'grid', gap: '20px' }}>
@@ -68,7 +70,7 @@ function CategorySpendingSection({ categorySpending }) {
                   </span>
                   <span style={{ display: 'flex', gap: '8px', alignItems: 'baseline' }}>
                     <span style={{ fontSize: '14px', fontWeight: '600', color: '#1e293b' }}>
-                      {item.total_spent}
+                      {formatCurrency(item.total_spent)}
                     </span>
                     <span style={{ fontSize: '12px', fontWeight: '500', color: '#94a3b8' }}>
                       {sharePercent}%

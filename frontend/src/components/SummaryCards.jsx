@@ -1,3 +1,5 @@
+import { formatCurrency } from '../utils/formatCurrency'
+
 function SummaryCards({ summary }) {
   const cards = [
     {
@@ -72,7 +74,7 @@ function SummaryCards({ summary }) {
                 lineHeight: 1,
               }}
             >
-              {card.value}
+              {formatCurrency(card.value)}
             </span>
             <span
               style={{

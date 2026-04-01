@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import AddExpenseForm from '../components/AddExpenseForm'
 import EditExpenseForm from '../components/EditExpenseForm'
 import { API_BASE_URL } from '../config/api'
+import { formatCurrency } from '../utils/formatCurrency'
 import '../App.css'
 
 const MONTH_NAMES = [
@@ -248,9 +249,9 @@ function ExpensesPage() {
 
   const deleteBtn = (id) => ({
     ...editBtnBase,
-    border: '1px solid #fca5a5',
+    border: '1px solid #fecaca',
     background: hoveredBtn === id ? '#fff1f2' : 'transparent',
-    color: '#ef4444',
+    color: '#dc2626',
   })
 
   /* ── Render ────────────────────────────────────────────────────── */
@@ -385,7 +386,7 @@ function ExpensesPage() {
           >
             <span style={kpiLabelStyle}>Total Spent</span>
             <span style={{ fontSize: '26px', fontWeight: '700', color: '#0f172a', lineHeight: 1 }}>
-              {totalSpent.toFixed(2)}
+              {formatCurrency(totalSpent)}
             </span>
           </div>
 
@@ -435,7 +436,7 @@ function ExpensesPage() {
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '5px' }}>
                           <span style={{ fontSize: '12px', fontWeight: '600', color: '#1e293b' }}>{item.name}</span>
                           <span style={{ display: 'flex', gap: '5px', alignItems: 'baseline' }}>
-                            <span style={{ fontSize: '12px', fontWeight: '600', color: '#1e293b' }}>{item.total.toFixed(2)}</span>
+                            <span style={{ fontSize: '12px', fontWeight: '600', color: '#1e293b' }}>{formatCurrency(item.total)}</span>
                             <span style={{ fontSize: '11px', color: '#94a3b8', fontWeight: '500' }}>{sharePct}%</span>
                           </span>
                         </div>
@@ -469,8 +470,8 @@ function ExpensesPage() {
                         <div style={{ flex: 1, height: '8px', background: '#f1f5f9', borderRadius: '999px', overflow: 'hidden' }}>
                           <div style={{ width: `${widthPct}%`, height: '100%', borderRadius: '999px', background: '#2563eb' }} />
                         </div>
-                        <span style={{ fontSize: '11px', color: '#475569', fontWeight: '600', width: '56px', flexShrink: 0 }}>
-                          {total.toFixed(2)}
+                        <span style={{ fontSize: '11px', color: '#475569', fontWeight: '600', width: '72px', flexShrink: 0 }}>
+                          {formatCurrency(total)}
                         </span>
                       </div>
                     )
@@ -569,7 +570,7 @@ function ExpensesPage() {
                             {expense.title}
                           </td>
                           <td style={{ ...rowTd, textAlign: 'right', fontWeight: '600', color: '#0f172a', fontVariantNumeric: 'tabular-nums', whiteSpace: 'nowrap' }}>
-                            {Number(expense.amount).toFixed(2)}
+                            {formatCurrency(Number(expense.amount))}
                           </td>
                           <td style={{ ...rowTd, color: '#64748b', whiteSpace: 'nowrap' }}>
                             {new Date(expense.expense_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}

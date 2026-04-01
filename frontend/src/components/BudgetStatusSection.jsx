@@ -1,3 +1,5 @@
+import { formatCurrency } from '../utils/formatCurrency'
+
 function BudgetStatusSection({ budgetStatus }) {
   return (
     <section
@@ -19,7 +21,7 @@ function BudgetStatusSection({ budgetStatus }) {
 
       {budgetStatus.length === 0 ? (
         <p style={{ margin: 0, color: '#94a3b8', fontSize: '14px' }}>
-          No budget data available for this period.
+          No budget data for this period.
         </p>
       ) : (
         <div style={{ display: 'grid', gap: '14px' }}>
@@ -100,9 +102,9 @@ function BudgetStatusSection({ budgetStatus }) {
                   }}
                 >
                   {[
-                    { label: 'Budget', value: item.budget_amount },
-                    { label: 'Spent', value: item.actual_spent },
-                    { label: 'Remaining', value: item.remaining_amount },
+                    { label: 'Budget', value: formatCurrency(item.budget_amount) },
+                    { label: 'Spent', value: formatCurrency(item.actual_spent) },
+                    { label: 'Remaining', value: formatCurrency(item.remaining_amount) },
                   ].map((stat) => (
                     <div key={stat.label}>
                       <span

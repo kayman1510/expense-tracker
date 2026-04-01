@@ -21,26 +21,23 @@ function formatToday() {
 }
 
 function Dashboard() {
+  const now = new Date()
+
   const [dashboardData, setDashboardData] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState('')
-  const [selectedMonth, setSelectedMonth] = useState(3)
-  const [selectedYear, setSelectedYear] = useState(2026)
+  const [loading, setLoading]             = useState(true)
+  const [error, setError]                 = useState('')
+  const [selectedMonth, setSelectedMonth] = useState(now.getMonth() + 1)
+  const [selectedYear, setSelectedYear]   = useState(now.getFullYear())
 
   useEffect(() => {
     async function fetchDashboardData() {
       try {
         setLoading(true)
         setError('')
-
         const response = await fetch(
           `${API_BASE_URL}/analytics/dashboard?month=${selectedMonth}&year=${selectedYear}`
         )
-
-        if (!response.ok) {
-          throw new Error('Failed to fetch dashboard data')
-        }
-
+        if (!response.ok) throw new Error('Failed to fetch dashboard data')
         const data = await response.json()
         setDashboardData(data)
       } catch (err) {
@@ -49,7 +46,6 @@ function Dashboard() {
         setLoading(false)
       }
     }
-
     fetchDashboardData()
   }, [selectedMonth, selectedYear])
 
@@ -68,80 +64,66 @@ function Dashboard() {
   return (
     <div style={{ background: '#f1f5f9', minHeight: '100%' }}>
 
-      {/* Header band */}
-      <div
-        style={{
-          background: '#ffffff',
-          borderBottom: '1px solid #e2e8f0',
-          padding: '14px 36px',
-        }}
-      >
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'flex-start',
-            justifyContent: 'space-between',
-            gap: '24px',
-          }}
-        >
-          {/* Left: title + period label */}
+      {/* ── Header band ─────────────────────────────────────────────── */}
+      <div style={{
+        background: '#ffffff',
+        borderTop: '1px solid rgba(0,0,0,0.07)',
+        borderBottom: '1px solid #e2e8f0',
+        boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
+        padding: '15px 36px',
+      }}>
+        <div style={{
+          display: 'flex',
+          alignItems: 'flex-start',
+          justifyContent: 'space-between',
+          gap: '24px',
+        }}>
+
+          {/* Left: title + period subtitle */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', paddingTop: '1px' }}>
-            <h1
-              style={{
-                margin: 0,
-                fontSize: '18px',
-                fontWeight: '700',
-                color: '#0f172a',
-                letterSpacing: '-0.01em',
-              }}
-            >
+            <h1 style={{
+              margin: 0,
+              fontSize: '16px',
+              fontWeight: '700',
+              color: '#0f172a',
+              letterSpacing: '-0.02em',
+            }}>
               Financial Dashboard
             </h1>
-            <p style={{ margin: 0, fontSize: '13px', color: '#64748b', fontWeight: '400' }}>
+            <p style={{ margin: 0, fontSize: '12px', color: '#94a3b8', fontWeight: '400' }}>
               Viewing {MONTH_NAMES[selectedMonth - 1]} {selectedYear}
             </p>
           </div>
 
-          {/* Right: period control + today date */}
-          <div
-            style={{
+          {/* Right: period pill + today date */}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '6px' }}>
+            <div style={{
               display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'flex-end',
-              gap: '6px',
-            }}
-          >
-            {/* Period pill */}
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                background: '#f8fafc',
-                border: '1px solid #e2e8f0',
-                borderRadius: '8px',
-                overflow: 'hidden',
-              }}
-            >
-              <span
-                style={{
-                  padding: '0 10px',
-                  fontSize: '11px',
-                  fontWeight: '600',
-                  letterSpacing: '0.06em',
-                  textTransform: 'uppercase',
-                  color: '#94a3b8',
-                  borderRight: '1px solid #e2e8f0',
-                  whiteSpace: 'nowrap',
-                  lineHeight: '30px',
-                }}
-              >
+              alignItems: 'center',
+              background: '#f8fafc',
+              border: '1px solid #cbd5e1',
+              borderRadius: '8px',
+              overflow: 'hidden',
+              boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
+            }}>
+              <span style={{
+                padding: '0 11px',
+                fontSize: '10px',
+                fontWeight: '700',
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase',
+                color: '#64748b',
+                borderRight: '1px solid #dde3ec',
+                whiteSpace: 'nowrap',
+                lineHeight: '32px',
+              }}>
                 Period
               </span>
               <select
                 id="month-select"
                 value={selectedMonth}
-                onChange={(event) => setSelectedMonth(Number(event.target.value))}
-                style={{ ...selectStyle, borderRight: '1px solid #e2e8f0' }}
+                onChange={(e) => setSelectedMonth(Number(e.target.value))}
+                style={{ ...selectStyle, borderRight: '1px solid #dde3ec' }}
               >
                 {MONTH_NAMES.map((name, i) => (
                   <option key={name} value={i + 1}>{name}</option>
@@ -150,7 +132,7 @@ function Dashboard() {
               <select
                 id="year-select"
                 value={selectedYear}
-                onChange={(event) => setSelectedYear(Number(event.target.value))}
+                onChange={(e) => setSelectedYear(Number(e.target.value))}
                 style={selectStyle}
               >
                 <option value={2025}>2025</option>
@@ -158,60 +140,47 @@ function Dashboard() {
               </select>
             </div>
 
-            {/* Today date — right-aligned, below the pill */}
-            <p
-              style={{
-                margin: 0,
-                fontSize: '12px',
-                color: '#94a3b8',
-                fontWeight: '400',
-              }}
-            >
-              Today: {formatToday()}
+            <p style={{ margin: 0, fontSize: '12px', color: '#94a3b8', fontWeight: '400' }}>
+              As of {formatToday()}
             </p>
           </div>
+
         </div>
       </div>
 
-      {/* Content area */}
-      <div style={{ padding: '32px 36px 48px' }}>
+      {/* ── Content area ────────────────────────────────────────────── */}
+      <div style={{ padding: '24px 36px 56px' }}>
+
         {loading && (
-          <p style={{ color: '#64748b' }}>Loading dashboard...</p>
+          <p style={{ color: '#64748b', margin: 0, fontSize: '13px' }}>Loading dashboard...</p>
         )}
-
         {error && (
-          <p style={{ color: '#dc2626' }}>Error: {error}</p>
+          <p style={{ color: '#dc2626', margin: 0, fontSize: '13px' }}>Error: {error}</p>
         )}
-
         {!loading && !error && !dashboardData && (
-          <p style={{ color: '#64748b' }}>No dashboard data available.</p>
+          <p style={{ color: '#94a3b8', margin: 0, fontSize: '13px' }}>No dashboard data available.</p>
         )}
 
         {!loading && !error && dashboardData && (
-          <div style={{ display: 'grid', gap: '24px' }}>
+          <div style={{ display: 'grid', gap: '20px' }}>
 
-            {/* Row 1: Summary cards — full width */}
+            {/* Row 1: Summary cards */}
             <SummaryCards summary={dashboardData.summary} />
 
-            {/* Row 2: Category spending + Budget status — side by side */}
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: '1fr 1fr',
-                gap: '24px',
-                alignItems: 'start',
-              }}
-            >
-              <CategorySpendingSection
-                categorySpending={dashboardData.category_spending}
-              />
+            {/* Row 2: Category spending + Budget status */}
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: '1fr 1fr',
+              gap: '20px',
+              alignItems: 'start',
+            }}>
+              <CategorySpendingSection categorySpending={dashboardData.category_spending} />
               <BudgetStatusSection budgetStatus={dashboardData.budget_status} />
             </div>
 
-            {/* Row 3: Month comparison — full width */}
-            <MonthComparisonSection
-              monthComparison={dashboardData.month_comparison}
-            />
+            {/* Row 3: Month comparison */}
+            <MonthComparisonSection monthComparison={dashboardData.month_comparison} />
+
           </div>
         )}
       </div>

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { API_BASE_URL } from '../config/api'
+import { formatCurrency } from '../utils/formatCurrency'
 import '../App.css'
 
 const MONTH_NAMES = [
@@ -220,9 +221,9 @@ function IncomePage() {
 
   const deleteBtn = (id) => ({
     ...deleteBtnBase,
-    border: '1px solid #fca5a5',
+    border: '1px solid #fecaca',
     background: hoveredBtn === id ? '#fff1f2' : 'transparent',
-    color: '#ef4444',
+    color: '#dc2626',
   })
 
   /* ── Render ────────────────────────────────────────────────────── */
@@ -356,7 +357,7 @@ function IncomePage() {
           >
             <span style={kpiLabelStyle}>Total Income</span>
             <span style={{ fontSize: '26px', fontWeight: '700', color: '#0f172a', lineHeight: 1 }}>
-              {totalIncome.toFixed(2)}
+              {formatCurrency(totalIncome)}
             </span>
           </div>
 
@@ -460,7 +461,7 @@ function IncomePage() {
 
                           {/* Amount — emphasized, right-aligned */}
                           <td style={{ ...rowTd, textAlign: 'right', fontWeight: '600', color: '#059669', fontVariantNumeric: 'tabular-nums', whiteSpace: 'nowrap' }}>
-                            {Number(item.amount).toFixed(2)}
+                            {formatCurrency(Number(item.amount))}
                           </td>
 
                           {/* Date — muted */}
