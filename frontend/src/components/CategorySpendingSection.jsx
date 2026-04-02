@@ -36,7 +36,7 @@ function CategorySpendingSection({ categorySpending }) {
       </div>
 
       {categorySpending.length === 0 ? (
-        <p style={{ margin: 0, color: '#94a3b8', fontSize: '14px' }}>
+        <p style={{ margin: 0, color: '#64748b', fontSize: '14px' }}>
           No spending data for this period.
         </p>
       ) : (

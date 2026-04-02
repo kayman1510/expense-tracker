@@ -650,3 +650,72 @@ tr:nth-child(even) td {
     padding: 12px 16px;
   }
 }
+
+/* ── CRUD page body wrapper — flex column with responsive padding ─ */
+.page-body {
+  padding: 24px 36px 56px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+@media (max-width: 640px) {
+  .page-body {
+    padding: 16px 16px 48px;
+  }
+}
+
+/* ── Primary workspace — 7/3 split, single column at ≤900px ──────── */
+.page-workspace-grid {
+  display: grid;
+  grid-template-columns: 7fr 3fr;
+  gap: 20px;
+  align-items: start;
+}
+.page-workspace-grid > * {
+  min-width: 0;
+}
+@media (max-width: 900px) {
+  .page-workspace-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Expenses KPI tiles — 3-col, 1-col at ≤640px ─────────────────── */
+.ep-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+@media (max-width: 640px) {
+  .ep-kpi-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Shared KPI grids — 3-col and 4-col with responsive collapse ──── */
+.kpi-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+@media (max-width: 640px) {
+  .kpi-grid-3 {
+    grid-template-columns: 1fr;
+  }
+}
+
+.kpi-grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+@media (max-width: 900px) {
+  .kpi-grid-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 640px) {
+  .kpi-grid-4 {
+    grid-template-columns: 1fr;
+  }
+}

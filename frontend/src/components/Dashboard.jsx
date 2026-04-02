@@ -4,21 +4,12 @@ import CategorySpendingSection from './CategorySpendingSection'
 import BudgetStatusSection from './BudgetStatusSection'
 import MonthComparisonSection from './MonthComparisonSection'
 import { API_BASE_URL } from '../config/api'
+import { formatToday } from '../utils/date'
 
 const MONTH_NAMES = [
   'January', 'February', 'March', 'April', 'May', 'June',
   'July', 'August', 'September', 'October', 'November', 'December',
 ]
-
-const SHORT_MONTH_NAMES = [
-  'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-  'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
-]
-
-function formatToday() {
-  const d = new Date()
-  return `${SHORT_MONTH_NAMES[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`
-}
 
 function Dashboard() {
   const now = new Date()
@@ -140,8 +131,8 @@ function Dashboard() {
               </select>
             </div>
 
-            <p style={{ margin: 0, fontSize: '12px', color: '#94a3b8', fontWeight: '400' }}>
-              As of {formatToday()}
+            <p style={{ margin: 0, fontSize: '12px', color: '#64748b', fontWeight: '500' }}>
+              Today: {formatToday()}
             </p>
           </div>
 

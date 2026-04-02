@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { API_BASE_URL } from '../config/api'
 import { formatCurrency } from '../utils/formatCurrency'
+import { formatToday } from '../utils/date'
 import '../App.css'
 
 const MONTH_NAMES = [
@@ -12,9 +13,9 @@ const MONTH_NAMES = [
 
 const supportCardStyle = {
   background: '#ffffff',
-  borderRadius: '10px',
+  borderRadius: '12px',
   padding: '16px 20px',
-  boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
+  boxShadow: '0 1px 4px rgba(0,0,0,0.06)',
   border: '1px solid #e2e8f0',
   transition: 'transform 0.15s ease, box-shadow 0.15s ease',
 }
@@ -41,7 +42,7 @@ const thStyle = {
   fontWeight: '600',
   letterSpacing: '0.06em',
   textTransform: 'uppercase',
-  color: '#64748b',
+  color: '#475569',
   whiteSpace: 'nowrap',
   background: '#f8fafc',
   borderBottom: '1px solid #e2e8f0',
@@ -62,15 +63,26 @@ const kpiLabelStyle = {
   fontWeight: '600',
   letterSpacing: '0.07em',
   textTransform: 'uppercase',
-  color: '#94a3b8',
+  color: '#64748b',
   marginBottom: '6px',
+}
+
+const editBtnBase = {
+  padding: '3px 10px',
+  fontSize: '11px',
+  fontWeight: '500',
+  borderRadius: '6px',
+  cursor: 'pointer',
+  lineHeight: '1.7',
+  letterSpacing: '0.01em',
+  transition: 'background 0.12s, color 0.12s',
 }
 
 const deleteBtnBase = {
   padding: '3px 10px',
   fontSize: '11px',
   fontWeight: '500',
-  borderRadius: '5px',
+  borderRadius: '6px',
   cursor: 'pointer',
   lineHeight: '1.7',
   letterSpacing: '0.01em',
@@ -87,6 +99,7 @@ function IncomePage() {
   const [error, setError]               = useState('')
   const [notification, setNotification] = useState('')
   const [submitting, setSubmitting]     = useState(false)
+  const [editingIncome, setEditingIncome] = useState(null)
 
   // Form fields
   const [source, setSource]         = useState('')
@@ -133,27 +146,57 @@ function IncomePage() {
 
   /* ── Handlers ──────────────────────────────────────────────────── */
 
+  const handleEdit = (item) => {
+    setEditingIncome(item)
+    setSource(item.source)
+    setAmount(String(item.amount))
+    setIncomeDate(item.income_date)
+    setNotes(item.notes || '')
+    setError('')
+  }
+
+  const handleCancelEdit = () => {
+    setEditingIncome(null)
+    setSource('')
+    setAmount('')
+    setIncomeDate('')
+    setNotes('')
+    setError('')
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     setError('')
     setSubmitting(true)
+    const payload = {
+      source,
+      amount: Number(amount),
+      income_date: incomeDate,
+      notes: notes || null,
+    }
     try {
-      const response = await fetch(`${API_BASE_URL}/income`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          source,
-          amount: Number(amount),
-          income_date: incomeDate,
-          notes: notes || null,
-        }),
-      })
-      if (!response.ok) throw new Error("Couldn't save this entry. Please try again.")
-      setNotification('Income entry added.')
-      setSource('')
-      setAmount('')
-      setIncomeDate('')
-      setNotes('')
+      if (editingIncome) {
+        const response = await fetch(`${API_BASE_URL}/income/${editingIncome.id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        })
+        if (!response.ok) throw new Error("Couldn't update this entry. Please try again.")
+        setNotification('Income entry updated.')
+        handleCancelEdit()
+      } else {
+        const response = await fetch(`${API_BASE_URL}/income`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        })
+        if (!response.ok) throw new Error("Couldn't save this entry. Please try again.")
+        setNotification('Income entry added.')
+        setSource('')
+        setAmount('')
+        setIncomeDate('')
+        setNotes('')
+      }
       fetchIncome()
     } catch (err) {
       setError(err.message)
@@ -217,6 +260,13 @@ function IncomePage() {
       ? '0 4px 12px rgba(0,0,0,0.09)'
       : '0 1px 3px rgba(0,0,0,0.05)',
     cursor: 'default',
+  })
+
+  const editBtn = (id) => ({
+    ...editBtnBase,
+    border: '1px solid #e2e8f0',
+    background: hoveredBtn === id ? '#f1f5f9' : 'transparent',
+    color: '#475569',
   })
 
   const deleteBtn = (id) => ({
@@ -286,6 +336,9 @@ function IncomePage() {
           opacity: 0.55;
           cursor: not-allowed;
         }
+        .ip-panel .ip-cancel-btn:hover {
+          background: #f1f5f9;
+        }
       `}</style>
 
       {/* ── 1. Header band ─────────────────────────────────────────── */}
@@ -301,53 +354,58 @@ function IncomePage() {
             <h1 style={{ margin: 0, fontSize: '16px', fontWeight: '700', color: '#0f172a', letterSpacing: '-0.02em' }}>
               Income
             </h1>
-            <p style={{ margin: 0, fontSize: '12px', color: '#94a3b8', fontWeight: '400', letterSpacing: '0.01em' }}>
+            <p style={{ margin: 0, fontSize: '12px', color: '#64748b', fontWeight: '400', letterSpacing: '0.01em' }}>
               Viewing {MONTH_NAMES[selectedMonth - 1]} {selectedYear}
             </p>
           </div>
 
-          <div className="period-selector" style={{
-            display: 'flex',
-            alignItems: 'center',
-            background: '#f8fafc',
-            border: '1px solid #cbd5e1',
-            borderRadius: '8px',
-            overflow: 'hidden',
-            boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
-          }}>
-            <span style={{
-              padding: '0 11px',
-              fontSize: '10px',
-              fontWeight: '700',
-              letterSpacing: '0.08em',
-              textTransform: 'uppercase',
-              color: '#64748b',
-              borderRight: '1px solid #dde3ec',
-              whiteSpace: 'nowrap',
-              lineHeight: '32px',
+          <div className="period-controls" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '6px' }}>
+            <div className="period-selector" style={{
+              display: 'flex',
+              alignItems: 'center',
+              background: '#f8fafc',
+              border: '1px solid #cbd5e1',
+              borderRadius: '8px',
+              overflow: 'hidden',
+              boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
             }}>
-              Period
-            </span>
-            <select value={selectedMonth} onChange={e => setSelectedMonth(Number(e.target.value))} style={{ ...periodSelectStyle, borderRight: '1px solid #dde3ec' }}>
-              {MONTH_NAMES.map((name, i) => <option key={name} value={i + 1}>{name}</option>)}
-            </select>
-            <select value={selectedYear} onChange={e => setSelectedYear(Number(e.target.value))} style={periodSelectStyle}>
-              <option value={2025}>2025</option>
-              <option value={2026}>2026</option>
-            </select>
+              <span style={{
+                padding: '0 11px',
+                fontSize: '10px',
+                fontWeight: '700',
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase',
+                color: '#64748b',
+                borderRight: '1px solid #dde3ec',
+                whiteSpace: 'nowrap',
+                lineHeight: '32px',
+              }}>
+                Period
+              </span>
+              <select value={selectedMonth} onChange={e => setSelectedMonth(Number(e.target.value))} style={{ ...periodSelectStyle, borderRight: '1px solid #dde3ec' }}>
+                {MONTH_NAMES.map((name, i) => <option key={name} value={i + 1}>{name}</option>)}
+              </select>
+              <select value={selectedYear} onChange={e => setSelectedYear(Number(e.target.value))} style={periodSelectStyle}>
+                <option value={2025}>2025</option>
+                <option value={2026}>2026</option>
+              </select>
+            </div>
+            <p style={{ margin: 0, fontSize: '12px', color: '#64748b', fontWeight: '500' }}>
+              Today: {formatToday()}
+            </p>
           </div>
 
         </div>
       </div>
 
       {/* ── Page body ──────────────────────────────────────────────── */}
-      <div style={{ padding: '24px 36px 56px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+      <div className="page-body">
 
         {notification && <p className="notification" style={{ margin: 0 }}>{notification}</p>}
         {error         && <p style={{ margin: 0, color: '#dc2626', fontSize: '13px' }}>Something went wrong. Please try again.</p>}
 
         {/* ── 2. KPI tiles ──────────────────────────────────────────── */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px' }}>
+        <div className="kpi-grid-3">
 
           <div
             style={kpiCard('income', '#059669')}
@@ -385,7 +443,7 @@ function IncomePage() {
         </div>
 
         {/* ── 3. PRIMARY WORKSPACE ─────────────────────────────────── */}
-        <div style={{ display: 'grid', gridTemplateColumns: '7fr 3fr', gap: '20px', alignItems: 'start' }}>
+        <div className="page-workspace-grid">
 
           {/* ── 3a. Income table — primary hero ───────────────────── */}
           <section style={tableCardStyle}>
@@ -395,11 +453,13 @@ function IncomePage() {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
+              flexWrap: 'wrap',
+              gap: '8px',
               padding: '16px 20px 13px',
               borderBottom: '1px solid #f1f5f9',
             }}>
-              <div>
-                <h3 style={{ margin: '0 0 2px 0', fontSize: '15px', fontWeight: '600', color: '#0f172a' }}>
+              <div style={{ minWidth: 0 }}>
+                <h3 style={{ margin: '0 0 4px 0', fontSize: '15px', fontWeight: '600', color: '#0f172a' }}>
                   Income Records
                 </h3>
                 <p style={{ margin: 0, fontSize: '12px', color: '#94a3b8', fontWeight: '400' }}>
@@ -414,7 +474,7 @@ function IncomePage() {
               <p style={{ color: '#64748b', margin: 0, fontSize: '13px', padding: '16px 20px' }}>Loading...</p>
             )}
             {!loading && filteredIncome.length === 0 && (
-              <p style={{ color: '#94a3b8', margin: 0, fontSize: '13px', padding: '16px 20px' }}>No income recorded for this period.</p>
+              <p style={{ color: '#64748b', margin: 0, fontSize: '13px', padding: '32px 20px', textAlign: 'center' }}>No income recorded for this period.</p>
             )}
 
             {/* Data table */}
@@ -477,14 +537,24 @@ function IncomePage() {
 
                           {/* Actions */}
                           <td style={{ ...rowTd, textAlign: 'right' }}>
-                            <button
-                              style={deleteBtn(`${item.id}-delete`)}
-                              onMouseEnter={() => setHoveredBtn(`${item.id}-delete`)}
-                              onMouseLeave={() => setHoveredBtn(null)}
-                              onClick={() => handleDelete(item.id)}
-                            >
-                              Delete
-                            </button>
+                            <div style={{ display: 'flex', gap: '5px', justifyContent: 'flex-end' }}>
+                              <button
+                                style={editBtn(`${item.id}-edit`)}
+                                onMouseEnter={() => setHoveredBtn(`${item.id}-edit`)}
+                                onMouseLeave={() => setHoveredBtn(null)}
+                                onClick={() => handleEdit(item)}
+                              >
+                                Edit
+                              </button>
+                              <button
+                                style={deleteBtn(`${item.id}-delete`)}
+                                onMouseEnter={() => setHoveredBtn(`${item.id}-delete`)}
+                                onMouseLeave={() => setHoveredBtn(null)}
+                                onClick={() => handleDelete(item.id)}
+                              >
+                                Delete
+                              </button>
+                            </div>
                           </td>
                         </tr>
                       )
@@ -507,10 +577,10 @@ function IncomePage() {
                 background: '#ffffff',
               }}>
                 <h3 style={{ margin: '0 0 1px 0', fontSize: '11px', fontWeight: '700', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.07em' }}>
-                  New Income
+                  {editingIncome ? 'Edit Income' : 'New Income'}
                 </h3>
                 <p style={{ margin: 0, fontSize: '12px', color: '#94a3b8', fontWeight: '400' }}>
-                  Record a new income entry
+                  {editingIncome ? `Editing: ${editingIncome.source}` : 'Record a new income entry'}
                 </p>
               </div>
 
@@ -565,8 +635,32 @@ function IncomePage() {
                   </div>
 
                   <button type="submit" disabled={submitting}>
-                    {submitting ? 'Adding...' : 'Add Income'}
+                    {submitting
+                      ? (editingIncome ? 'Saving...' : 'Adding...')
+                      : (editingIncome ? 'Save Changes' : 'Add Income')
+                    }
                   </button>
+
+                  {editingIncome && (
+                    <button
+                      type="button"
+                      onClick={handleCancelEdit}
+                      style={{
+                        width: '100%',
+                        marginTop: '6px',
+                        padding: '7px 16px',
+                        fontSize: '13px',
+                        fontWeight: '500',
+                        background: 'transparent',
+                        color: '#64748b',
+                        border: '1px solid #e2e8f0',
+                        borderRadius: '6px',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      Cancel
+                    </button>
+                  )}
                 </form>
               </div>
 

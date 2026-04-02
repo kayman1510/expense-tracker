@@ -20,7 +20,7 @@ function BudgetStatusSection({ budgetStatus }) {
       </div>
 
       {budgetStatus.length === 0 ? (
-        <p style={{ margin: 0, color: '#94a3b8', fontSize: '14px' }}>
+        <p style={{ margin: 0, color: '#64748b', fontSize: '14px' }}>
           No budget data for this period.
         </p>
       ) : (
@@ -114,7 +114,7 @@ function BudgetStatusSection({ budgetStatus }) {
                           fontWeight: '600',
                           letterSpacing: '0.07em',
                           textTransform: 'uppercase',
-                          color: '#94a3b8',
+                          color: '#64748b',
                           marginBottom: '3px',
                         }}
                       >

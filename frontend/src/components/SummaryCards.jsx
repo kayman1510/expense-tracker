@@ -33,7 +33,7 @@ function SummaryCards({ summary }) {
           style={{
             background: '#ffffff',
             borderRadius: '12px',
-            padding: '28px 24px',
+            padding: '28px 32px',
             borderLeft: `4px solid ${card.accent}`,
             boxShadow: '0 1px 4px rgba(0,0,0,0.06)',
             display: 'flex',
@@ -47,7 +47,7 @@ function SummaryCards({ summary }) {
               fontWeight: '600',
               letterSpacing: '0.08em',
               textTransform: 'uppercase',
-              color: '#94a3b8',
+              color: '#64748b',
             }}
           >
             {card.label}

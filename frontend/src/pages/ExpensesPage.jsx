@@ -3,6 +3,7 @@ import AddExpenseForm from '../components/AddExpenseForm'
 import EditExpenseForm from '../components/EditExpenseForm'
 import { API_BASE_URL } from '../config/api'
 import { formatCurrency } from '../utils/formatCurrency'
+import { formatToday } from '../utils/date'
 import '../App.css'
 
 const MONTH_NAMES = [
@@ -17,9 +18,9 @@ const BAR_COLORS = ['#2563eb', '#0d9488', '#7c3aed', '#ea580c', '#059669', '#be1
 // Supporting cards (KPI tiles, charts) — lighter than the table hero
 const supportCardStyle = {
   background: '#ffffff',
-  borderRadius: '10px',
+  borderRadius: '12px',
   padding: '16px 20px',
-  boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
+  boxShadow: '0 1px 4px rgba(0,0,0,0.06)',
   border: '1px solid #e2e8f0',
   transition: 'transform 0.15s ease, box-shadow 0.15s ease',
 }
@@ -49,7 +50,7 @@ const thStyle = {
   fontWeight: '600',
   letterSpacing: '0.06em',
   textTransform: 'uppercase',
-  color: '#64748b',
+  color: '#475569',
   whiteSpace: 'nowrap',
   background: '#f8fafc',
   borderBottom: '1px solid #e2e8f0',
@@ -70,7 +71,7 @@ const editBtnBase = {
   padding: '3px 10px',
   fontSize: '11px',
   fontWeight: '500',
-  borderRadius: '5px',
+  borderRadius: '6px',
   cursor: 'pointer',
   lineHeight: '1.7',
   letterSpacing: '0.01em',
@@ -83,13 +84,13 @@ const kpiLabelStyle = {
   fontWeight: '600',
   letterSpacing: '0.07em',
   textTransform: 'uppercase',
-  color: '#94a3b8',
+  color: '#64748b',
   marginBottom: '6px',
 }
 
 const headingStyle = {
   margin: '0 0 14px 0',
-  fontSize: '14px',
+  fontSize: '15px',
   fontWeight: '600',
   color: '#0f172a',
 }
@@ -315,6 +316,11 @@ function ExpensesPage() {
           opacity: 0.55;
           cursor: not-allowed;
         }
+        @media (max-width: 640px) {
+          .ep-analytics-grid {
+            grid-template-columns: 1fr !important;
+          }
+        }
       `}</style>
 
       {/* ── 1. Header band ─────────────────────────────────────────── */}
@@ -330,53 +336,58 @@ function ExpensesPage() {
             <h1 style={{ margin: 0, fontSize: '16px', fontWeight: '700', color: '#0f172a', letterSpacing: '-0.02em' }}>
               Expenses
             </h1>
-            <p style={{ margin: 0, fontSize: '12px', color: '#94a3b8', fontWeight: '400', letterSpacing: '0.01em' }}>
+            <p style={{ margin: 0, fontSize: '12px', color: '#64748b', fontWeight: '400', letterSpacing: '0.01em' }}>
               Viewing {MONTH_NAMES[selectedMonth - 1]} {selectedYear}
             </p>
           </div>
 
-          <div className="period-selector" style={{
-            display: 'flex',
-            alignItems: 'center',
-            background: '#f8fafc',
-            border: '1px solid #cbd5e1',
-            borderRadius: '8px',
-            overflow: 'hidden',
-            boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
-          }}>
-            <span style={{
-              padding: '0 11px',
-              fontSize: '10px',
-              fontWeight: '700',
-              letterSpacing: '0.08em',
-              textTransform: 'uppercase',
-              color: '#64748b',
-              borderRight: '1px solid #dde3ec',
-              whiteSpace: 'nowrap',
-              lineHeight: '32px',
+          <div className="period-controls" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '6px' }}>
+            <div className="period-selector" style={{
+              display: 'flex',
+              alignItems: 'center',
+              background: '#f8fafc',
+              border: '1px solid #cbd5e1',
+              borderRadius: '8px',
+              overflow: 'hidden',
+              boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
             }}>
-              Period
-            </span>
-            <select value={selectedMonth} onChange={e => setSelectedMonth(Number(e.target.value))} style={{ ...periodSelectStyle, borderRight: '1px solid #dde3ec' }}>
-              {MONTH_NAMES.map((name, i) => <option key={name} value={i + 1}>{name}</option>)}
-            </select>
-            <select value={selectedYear} onChange={e => setSelectedYear(Number(e.target.value))} style={periodSelectStyle}>
-              <option value={2025}>2025</option>
-              <option value={2026}>2026</option>
-            </select>
+              <span style={{
+                padding: '0 11px',
+                fontSize: '10px',
+                fontWeight: '700',
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase',
+                color: '#64748b',
+                borderRight: '1px solid #dde3ec',
+                whiteSpace: 'nowrap',
+                lineHeight: '32px',
+              }}>
+                Period
+              </span>
+              <select value={selectedMonth} onChange={e => setSelectedMonth(Number(e.target.value))} style={{ ...periodSelectStyle, borderRight: '1px solid #dde3ec' }}>
+                {MONTH_NAMES.map((name, i) => <option key={name} value={i + 1}>{name}</option>)}
+              </select>
+              <select value={selectedYear} onChange={e => setSelectedYear(Number(e.target.value))} style={periodSelectStyle}>
+                <option value={2025}>2025</option>
+                <option value={2026}>2026</option>
+              </select>
+            </div>
+            <p style={{ margin: 0, fontSize: '12px', color: '#64748b', fontWeight: '500' }}>
+              Today: {formatToday()}
+            </p>
           </div>
 
         </div>
       </div>
 
       {/* ── Page body ──────────────────────────────────────────────── */}
-      <div style={{ padding: '24px 36px 56px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+      <div className="page-body">
 
         {notification && <p className="notification" style={{ margin: 0 }}>{notification}</p>}
         {expenseError  && <p style={{ margin: 0, color: '#dc2626', fontSize: '13px' }}>{expenseError}</p>}
 
         {/* ── 2. KPI tiles ──────────────────────────────────────────── */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px' }}>
+        <div className="ep-kpi-grid">
 
           <div
             style={kpiCard('spent', '#2563eb')}
@@ -415,17 +426,17 @@ function ExpensesPage() {
 
         {/* ── 3. Charts (conditional) ───────────────────────────────── */}
         {hasChartData && (
-          <div style={{
+          <div className="ep-analytics-grid" style={{
             display: 'grid',
             gridTemplateColumns: categoryBreakdown.length > 0 && dailySpend.length > 0 ? '1fr 1fr' : '1fr',
             gap: '16px',
-            alignItems: 'start',
+            alignItems: 'stretch',
           }}>
 
             {categoryBreakdown.length > 0 && (
-              <section style={supportCardStyle}>
+              <section style={{ ...supportCardStyle, display: 'flex', flexDirection: 'column' }}>
                 <h3 style={headingStyle}>By Category</h3>
-                <div style={{ display: 'grid', gap: '11px' }}>
+                <div style={{ display: 'grid', gap: '11px', flex: 1 }}>
                   {categoryBreakdown.map((item, index) => {
                     const widthPct = (item.total / categoryBreakdown[0].total) * 100
                     const sharePct = totalSpent > 0 ? ((item.total / totalSpent) * 100).toFixed(1) : '0.0'
@@ -450,14 +461,14 @@ function ExpensesPage() {
             )}
 
             {dailySpend.length > 0 && (
-              <section style={supportCardStyle}>
+              <section style={{ ...supportCardStyle, display: 'flex', flexDirection: 'column' }}>
                 <h3 style={headingStyle}>
                   Daily Spending
                   <span style={{ marginLeft: '8px', fontSize: '11px', fontWeight: '400', color: '#94a3b8' }}>
                     {MONTH_NAMES[selectedMonth - 1]} {selectedYear}
                   </span>
                 </h3>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', flex: 1, overflowY: 'auto', maxHeight: '360px' }}>
                   {dailySpend.map(({ date, total }) => {
                     const widthPct = (total / maxDailySpend) * 100
                     const label = new Date(date + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
@@ -483,7 +494,7 @@ function ExpensesPage() {
         )}
 
         {/* ── 4. PRIMARY WORKSPACE ─────────────────────────────────── */}
-        <div style={{ display: 'grid', gridTemplateColumns: '7fr 3fr', gap: '20px', alignItems: 'start' }}>
+        <div className="page-workspace-grid">
 
           {/* ── 4a. Transactions table — hero ─────────────────────── */}
           <section style={tableCardStyle}>
@@ -493,11 +504,13 @@ function ExpensesPage() {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
+              flexWrap: 'wrap',
+              gap: '12px',
               padding: '16px 20px 13px',
               borderBottom: '1px solid #f1f5f9',
             }}>
-              <div>
-                <h3 style={{ margin: '0 0 2px 0', fontSize: '15px', fontWeight: '600', color: '#0f172a' }}>
+              <div style={{ minWidth: 0 }}>
+                <h3 style={{ margin: '0 0 4px 0', fontSize: '15px', fontWeight: '600', color: '#0f172a' }}>
                   Transactions
                 </h3>
                 <p style={{ margin: 0, fontSize: '12px', color: '#94a3b8', fontWeight: '400' }}>
@@ -528,7 +541,7 @@ function ExpensesPage() {
               <p style={{ color: '#64748b', margin: 0, fontSize: '13px', padding: '16px 20px' }}>Loading...</p>
             )}
             {!loadingExpenses && filteredExpenses.length === 0 && (
-              <p style={{ color: '#94a3b8', margin: 0, fontSize: '13px', padding: '16px 20px' }}>No expenses recorded for this period.</p>
+              <p style={{ color: '#64748b', margin: 0, fontSize: '13px', padding: '32px 20px', textAlign: 'center' }}>No expenses recorded for this period.</p>
             )}
 
             {/* Data table */}
@@ -581,7 +594,7 @@ function ExpensesPage() {
                               fontWeight: '500',
                               color: '#475569',
                               background: '#eef2f7',
-                              borderRadius: '5px',
+                              borderRadius: '999px',
                               padding: '2px 8px',
                               whiteSpace: 'nowrap',
                             }}>

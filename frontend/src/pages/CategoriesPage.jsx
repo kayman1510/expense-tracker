@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { API_BASE_URL } from '../config/api'
 import '../App.css'
+import { formatToday } from '../utils/date'
 
 /* ── Style tokens (mirrors ExpensesPage) ─────────────────────────── */
 
@@ -26,7 +27,7 @@ const thStyle = {
   fontWeight: '600',
   letterSpacing: '0.06em',
   textTransform: 'uppercase',
-  color: '#64748b',
+  color: '#475569',
   whiteSpace: 'nowrap',
   background: '#f8fafc',
   borderBottom: '1px solid #e2e8f0',
@@ -45,7 +46,7 @@ const editBtnBase = {
   padding: '3px 10px',
   fontSize: '11px',
   fontWeight: '500',
-  borderRadius: '5px',
+  borderRadius: '6px',
   cursor: 'pointer',
   lineHeight: '1.7',
   letterSpacing: '0.01em',
@@ -232,29 +233,35 @@ function CategoriesPage() {
       `}</style>
 
       {/* ── Header band ──────────────────────────────────────────────── */}
-      <div style={{
+      <div className="page-header-band" style={{
         background: '#ffffff',
         borderTop: '1px solid rgba(0,0,0,0.07)',
         borderBottom: '1px solid #e2e8f0',
         boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
-        padding: '15px 36px',
       }}>
-        <h1 style={{ margin: 0, fontSize: '16px', fontWeight: '700', color: '#0f172a', letterSpacing: '-0.02em' }}>
-          Categories
-        </h1>
-        <p style={{ margin: '2px 0 0', fontSize: '12px', color: '#94a3b8', fontWeight: '400', letterSpacing: '0.01em' }}>
-          Manage expense and budget categories
-        </p>
+        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+            <h1 style={{ margin: 0, fontSize: '16px', fontWeight: '700', color: '#0f172a', letterSpacing: '-0.02em' }}>
+              Categories
+            </h1>
+            <p style={{ margin: 0, fontSize: '12px', color: '#94a3b8', fontWeight: '400', letterSpacing: '0.01em' }}>
+              Manage expense and budget categories
+            </p>
+          </div>
+          <p style={{ margin: 0, fontSize: '12px', color: '#64748b', fontWeight: '500' }}>
+            Today: {formatToday()}
+          </p>
+        </div>
       </div>
 
       {/* ── Page body ────────────────────────────────────────────────── */}
-      <div style={{ padding: '24px 36px 56px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+      <div className="page-body">
 
         {notification && <p className="notification" style={{ margin: 0 }}>{notification}</p>}
         {error         && <p style={{ margin: 0, color: '#dc2626', fontSize: '13px' }}>{error}</p>}
 
         {/* ── Primary workspace ────────────────────────────────────── */}
-        <div style={{ display: 'grid', gridTemplateColumns: '7fr 3fr', gap: '20px', alignItems: 'start' }}>
+        <div className="page-workspace-grid">
 
           {/* ── Category table — hero ─────────────────────────────── */}
           <section style={tableCardStyle}>
@@ -263,7 +270,7 @@ function CategoriesPage() {
               padding: '16px 20px 13px',
               borderBottom: '1px solid #f1f5f9',
             }}>
-              <h3 style={{ margin: '0 0 2px 0', fontSize: '15px', fontWeight: '600', color: '#0f172a' }}>
+              <h3 style={{ margin: '0 0 4px 0', fontSize: '15px', fontWeight: '600', color: '#0f172a' }}>
                 All Categories
               </h3>
               <p style={{ margin: 0, fontSize: '12px', color: '#94a3b8', fontWeight: '400' }}>
@@ -277,7 +284,7 @@ function CategoriesPage() {
               <p style={{ color: '#64748b', margin: 0, fontSize: '13px', padding: '16px 20px' }}>Loading...</p>
             )}
             {!loading && categories.length === 0 && (
-              <p style={{ color: '#94a3b8', margin: 0, fontSize: '13px', padding: '16px 20px' }}>No categories yet. Add your first one using the form on the right.</p>
+              <p style={{ color: '#64748b', margin: 0, fontSize: '13px', padding: '32px 20px', textAlign: 'center' }}>No categories yet. Add one using the form below.</p>
             )}
 
             {!loading && categories.length > 0 && (
