@@ -374,7 +374,7 @@ function ExpensesPage() {
       <div style={{ padding: '24px 36px 56px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
 
         {notification && <p className="notification" style={{ margin: 0 }}>{notification}</p>}
-        {expenseError  && <p style={{ margin: 0, color: '#dc2626', fontSize: '13px' }}>Error: {expenseError}</p>}
+        {expenseError  && <p style={{ margin: 0, color: '#dc2626', fontSize: '13px' }}>{expenseError}</p>}
 
         {/* ── 2. KPI tiles ──────────────────────────────────────────── */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px' }}>

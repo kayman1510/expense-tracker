@@ -108,7 +108,7 @@ function AddExpenseForm({ categories, onExpenseAdded }) {
         </div>
       </form>
 
-      {error && <p>Error: {error}</p>}
+      {error && <p>{error}</p>}
     </div>
   )
 }

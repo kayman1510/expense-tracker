@@ -142,7 +142,17 @@ function CategoriesPage() {
     try {
       const r = await fetch(`${API_BASE_URL}/categories/${id}`, { method: 'DELETE' })
       const data = await r.json()
-      if (!r.ok) throw new Error(data.detail || 'Failed to delete category')
+      if (!r.ok) {
+        const match = (data.detail || '').match(/(\d+) expense\(s\) and (\d+) budget\(s\)/)
+        if (match) {
+          const exp = Number(match[1])
+          const bud = Number(match[2])
+          throw new Error(
+            `This category can't be deleted because it's used in ${exp} expense${exp !== 1 ? 's' : ''} and ${bud} budget${bud !== 1 ? 's' : ''}. Reassign or remove those entries first.`
+          )
+        }
+        throw new Error("Couldn't delete this category. Please try again.")
+      }
       setNotification('Category deleted.')
       if (editingCategory?.id === id) handleCancelEdit()
       fetchCategories()
@@ -241,7 +251,7 @@ function CategoriesPage() {
       <div style={{ padding: '24px 36px 56px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
 
         {notification && <p className="notification" style={{ margin: 0 }}>{notification}</p>}
-        {error         && <p style={{ margin: 0, color: '#dc2626', fontSize: '13px' }}>Error: {error}</p>}
+        {error         && <p style={{ margin: 0, color: '#dc2626', fontSize: '13px' }}>{error}</p>}
 
         {/* ── Primary workspace ────────────────────────────────────── */}
         <div style={{ display: 'grid', gridTemplateColumns: '7fr 3fr', gap: '20px', alignItems: 'start' }}>

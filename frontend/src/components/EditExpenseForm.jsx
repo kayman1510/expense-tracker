@@ -117,7 +117,7 @@ function EditExpenseForm({ expense, categories, onExpenseUpdated, onCancelEdit }
         </div>
       </form>
 
-      {error && <p>Error: {error}</p>}
+      {error && <p>{error}</p>}
     </div>
   )
 }
