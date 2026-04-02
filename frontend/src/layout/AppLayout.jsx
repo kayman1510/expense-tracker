@@ -21,10 +21,11 @@ function AppLayout() {
   })
 
   const navLinks = [
-    { to: '/',         label: 'Dashboard', id: 'dashboard', end: true },
-    { to: '/expenses', label: 'Expenses',  id: 'expenses' },
-    { to: '/budgets',  label: 'Budgets',   id: 'budgets'  },
-    { to: '/income',   label: 'Income',    id: 'income'   },
+    { to: '/',            label: 'Dashboard',  id: 'dashboard',  end: true },
+    { to: '/expenses',    label: 'Expenses',   id: 'expenses'  },
+    { to: '/categories',  label: 'Categories', id: 'categories' },
+    { to: '/budgets',     label: 'Budgets',    id: 'budgets'   },
+    { to: '/income',      label: 'Income',     id: 'income'    },
   ]
 
   return (

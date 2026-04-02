@@ -65,6 +65,66 @@ def create_category(category: CategoryCreate):
         raise HTTPException(status_code=400, detail="Category already exists or could not be created")
 
 
+@router.put("/categories/{category_id}", response_model=CategoryResponse)
+def update_category(category_id: int, category: CategoryCreate):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT id FROM categories WHERE id = ?", (category_id,))
+    if cursor.fetchone() is None:
+        conn.close()
+        raise HTTPException(status_code=404, detail="Category not found")
+
+    try:
+        cursor.execute(
+            "UPDATE categories SET name = ? WHERE id = ?",
+            (category.name, category_id)
+        )
+        conn.commit()
+
+        cursor.execute(
+            "SELECT id, name, created_at FROM categories WHERE id = ?",
+            (category_id,)
+        )
+        row = cursor.fetchone()
+        conn.close()
+        return dict(row)
+
+    except Exception:
+        conn.close()
+        raise HTTPException(status_code=400, detail="Category name already exists or could not be updated")
+
+
+@router.delete("/categories/{category_id}")
+def delete_category(category_id: int):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT id FROM categories WHERE id = ?", (category_id,))
+    if cursor.fetchone() is None:
+        conn.close()
+        raise HTTPException(status_code=404, detail="Category not found")
+
+    cursor.execute("SELECT COUNT(*) FROM expenses WHERE category_id = ?", (category_id,))
+    expense_count = cursor.fetchone()[0]
+
+    cursor.execute("SELECT COUNT(*) FROM budgets WHERE category_id = ?", (category_id,))
+    budget_count = cursor.fetchone()[0]
+
+    if expense_count > 0 or budget_count > 0:
+        conn.close()
+        raise HTTPException(
+            status_code=400,
+            detail=f"Cannot delete: category is used by {expense_count} expense(s) and {budget_count} budget(s)"
+        )
+
+    cursor.execute("DELETE FROM categories WHERE id = ?", (category_id,))
+    conn.commit()
+    conn.close()
+
+    return {"message": "Category deleted successfully"}
+
+
 # ------------------ EXPENSES ------------------
 
 @router.get("/expenses", response_model=list[ExpenseResponse])
