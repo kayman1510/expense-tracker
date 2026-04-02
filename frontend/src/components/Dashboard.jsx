@@ -152,13 +152,13 @@ function Dashboard() {
       <div style={{ padding: '24px 36px 56px' }}>
 
         {loading && (
-          <p style={{ color: '#64748b', margin: 0, fontSize: '13px' }}>Loading dashboard...</p>
+          <p style={{ color: '#64748b', margin: 0, fontSize: '13px' }}>Loading...</p>
         )}
         {error && (
-          <p style={{ color: '#dc2626', margin: 0, fontSize: '13px' }}>Error: {error}</p>
+          <p style={{ color: '#dc2626', margin: 0, fontSize: '13px' }}>Something went wrong. Please try again.</p>
         )}
         {!loading && !error && !dashboardData && (
-          <p style={{ color: '#94a3b8', margin: 0, fontSize: '13px' }}>No dashboard data available.</p>
+          <p style={{ color: '#94a3b8', margin: 0, fontSize: '13px' }}>No data available for this period.</p>
         )}
 
         {!loading && !error && dashboardData && (
@@ -167,16 +167,11 @@ function Dashboard() {
             {/* Row 1: Summary cards */}
             <SummaryCards summary={dashboardData.summary} />
 
-            {/* Row 2: Category spending + Budget status */}
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: '1fr 1fr',
-              gap: '20px',
-              alignItems: 'start',
-            }}>
-              <CategorySpendingSection categorySpending={dashboardData.category_spending} />
-              <BudgetStatusSection budgetStatus={dashboardData.budget_status} />
-            </div>
+            {/* Row 2: Category spending */}
+            <CategorySpendingSection categorySpending={dashboardData.category_spending} />
+
+            {/* Row 3: Budget status */}
+            <BudgetStatusSection budgetStatus={dashboardData.budget_status} />
 
             {/* Row 3: Month comparison */}
             <MonthComparisonSection monthComparison={dashboardData.month_comparison} />

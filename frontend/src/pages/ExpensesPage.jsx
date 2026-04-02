@@ -117,7 +117,7 @@ function ExpensesPage() {
   useEffect(() => {
     fetch(`${API_BASE_URL}/categories`)
       .then(r => {
-        if (!r.ok) throw new Error('Failed to fetch categories')
+        if (!r.ok) throw new Error("Couldn't load categories. Please refresh.")
         return r.json()
       })
       .then(data => {
@@ -137,7 +137,7 @@ function ExpensesPage() {
     if (selectedCategoryId) url += `&category_id=${selectedCategoryId}`
     fetch(url)
       .then(r => {
-        if (!r.ok) throw new Error('Failed to fetch expenses')
+        if (!r.ok) throw new Error("Couldn't load expenses. Please refresh.")
         return r.json()
       })
       .then(data => {
@@ -159,11 +159,11 @@ function ExpensesPage() {
   }, [notification])
 
   const handleDeleteExpense = async (expenseId) => {
-    if (!window.confirm('Delete this expense?')) return
+    if (!window.confirm('Delete this expense? This action cannot be undone.')) return
     try {
       const r = await fetch(`${API_BASE_URL}/expenses/${expenseId}`, { method: 'DELETE' })
-      if (!r.ok) throw new Error('Failed to delete expense')
-      setNotification('Expense deleted successfully')
+      if (!r.ok) throw new Error("Couldn't delete this expense. Please try again.")
+      setNotification('Expense deleted.')
       fetchExpenses()
     } catch (err) {
       setExpenseError(err.message)
@@ -172,8 +172,8 @@ function ExpensesPage() {
 
   const handleEditExpense    = (expense) => setEditingExpense(expense)
   const handleCancelEdit     = () => setEditingExpense(null)
-  const handleExpenseAdded   = () => { setNotification('Expense added successfully');   fetchExpenses() }
-  const handleExpenseUpdated = () => { setEditingExpense(null); setNotification('Expense updated successfully'); fetchExpenses() }
+  const handleExpenseAdded   = () => { setNotification('Expense added.');   fetchExpenses() }
+  const handleExpenseUpdated = () => { setEditingExpense(null); setNotification('Expense updated.'); fetchExpenses() }
 
   /* ── Derived data ──────────────────────────────────────────────── */
 
@@ -529,7 +529,7 @@ function ExpensesPage() {
               <p style={{ color: '#64748b', margin: 0, fontSize: '13px', padding: '16px 20px' }}>Loading...</p>
             )}
             {!loadingExpenses && filteredExpenses.length === 0 && (
-              <p style={{ color: '#94a3b8', margin: 0, fontSize: '13px', padding: '16px 20px' }}>No transactions for this period.</p>
+              <p style={{ color: '#94a3b8', margin: 0, fontSize: '13px', padding: '16px 20px' }}>No expenses recorded for this period.</p>
             )}
 
             {/* Data table */}
@@ -656,7 +656,7 @@ function ExpensesPage() {
                 ) : (
                   <>
                     {loadingCategories && <p style={{ color: '#64748b', margin: 0, fontSize: '13px' }}>Loading categories...</p>}
-                    {categoryError    && <p style={{ color: '#dc2626', margin: 0, fontSize: '13px' }}>Could not load categories.</p>}
+                    {categoryError    && <p style={{ color: '#dc2626', margin: 0, fontSize: '13px' }}>Couldn't load categories. Please refresh.</p>}
                     {!loadingCategories && !categoryError && (
                       <AddExpenseForm categories={categories} onExpenseAdded={handleExpenseAdded} />
                     )}

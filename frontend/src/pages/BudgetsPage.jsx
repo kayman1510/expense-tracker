@@ -119,7 +119,7 @@ function BudgetsPage() {
   const fetchBudgets = () => {
     fetch(`${API_BASE_URL}/budgets`)
       .then(r => {
-        if (!r.ok) throw new Error('Failed to fetch budgets')
+        if (!r.ok) throw new Error("Couldn't load budgets. Please refresh.")
         return r.json()
       })
       .then(data => setBudgets(data))
@@ -131,7 +131,7 @@ function BudgetsPage() {
     setError('')
     fetch(`${API_BASE_URL}/analytics/budget-vs-actual?month=${selectedMonth}&year=${selectedYear}`)
       .then(r => {
-        if (!r.ok) throw new Error('Failed to fetch budget data')
+        if (!r.ok) throw new Error("Couldn't load budget data. Please refresh.")
         return r.json()
       })
       .then(data => {
@@ -188,11 +188,11 @@ function BudgetsPage() {
   const handleDelete = async (row) => {
     const b = budgets.find(bud => bud.category_id === row.category_id)
     if (!b) return
-    if (!window.confirm('Delete this budget?')) return
+    if (!window.confirm('Delete this budget? This action cannot be undone.')) return
     try {
       const r = await fetch(`${API_BASE_URL}/budgets/${b.id}`, { method: 'DELETE' })
-      if (!r.ok) throw new Error('Failed to delete budget')
-      setNotification('Budget deleted')
+      if (!r.ok) throw new Error("Couldn't delete this budget. Please try again.")
+      setNotification('Budget deleted.')
       fetchBudgets()
       fetchBudgetVsActual()
     } catch (err) {
@@ -221,9 +221,9 @@ function BudgetsPage() {
         })
         if (!r.ok) {
           const err = await r.json()
-          throw new Error(err.detail || 'Failed to update budget')
+          throw new Error(err.detail || "Couldn't update this budget. Please try again.")
         }
-        setNotification('Budget updated')
+        setNotification('Budget updated.')
       } else {
         const r = await fetch(`${API_BASE_URL}/budgets`, {
           method: 'POST',
@@ -232,9 +232,9 @@ function BudgetsPage() {
         })
         if (!r.ok) {
           const err = await r.json()
-          throw new Error(err.detail || 'Failed to create budget')
+          throw new Error(err.detail || "Couldn't save this budget. Please try again.")
         }
-        setNotification('Budget added')
+        setNotification('Budget added.')
       }
       resetForm()
       fetchBudgets()
@@ -466,7 +466,7 @@ function BudgetsPage() {
       <div style={{ padding: '24px 36px 56px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
 
         {notification && <p className="notification" style={{ margin: 0 }}>{notification}</p>}
-        {error         && <p style={{ margin: 0, color: '#dc2626', fontSize: '13px' }}>Error: {error}</p>}
+        {error         && <p style={{ margin: 0, color: '#dc2626', fontSize: '13px' }}>Something went wrong. Please try again.</p>}
 
         {/* ── 2. KPI tiles ──────────────────────────────────────────── */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px' }}>
@@ -552,7 +552,7 @@ function BudgetsPage() {
               <p style={{ color: '#64748b', margin: 0, fontSize: '13px', padding: '16px 20px' }}>Loading...</p>
             )}
             {!loading && budgetVsActual.length === 0 && (
-              <p style={{ color: '#94a3b8', margin: 0, fontSize: '13px', padding: '16px 20px' }}>No budgets set for this period.</p>
+              <p style={{ color: '#94a3b8', margin: 0, fontSize: '13px', padding: '16px 20px' }}>No budgets set for this period. Add one using the form.</p>
             )}
 
             {/* Data table */}

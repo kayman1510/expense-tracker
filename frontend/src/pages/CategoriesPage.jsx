@@ -71,7 +71,7 @@ function CategoriesPage() {
     setError('')
     fetch(`${API_BASE_URL}/categories`)
       .then(r => {
-        if (!r.ok) throw new Error('Failed to fetch categories')
+        if (!r.ok) throw new Error("Couldn't load categories. Please refresh.")
         return r.json()
       })
       .then(data => {
@@ -107,7 +107,7 @@ function CategoriesPage() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     const name = formName.trim()
-    if (!name) { setFormError('Name is required'); return }
+    if (!name) { setFormError('Please enter a category name.'); return }
 
     setSubmitting(true)
     setFormError('')
@@ -126,7 +126,7 @@ function CategoriesPage() {
       const data = await r.json()
       if (!r.ok) throw new Error(data.detail || 'Request failed')
 
-      setNotification(editingCategory ? 'Category updated' : 'Category added')
+      setNotification(editingCategory ? 'Category updated successfully.' : 'Category added successfully.')
       setEditingCategory(null)
       setFormName('')
       fetchCategories()
@@ -138,12 +138,12 @@ function CategoriesPage() {
   }
 
   const handleDelete = async (id) => {
-    if (!window.confirm('Delete this category?')) return
+    if (!window.confirm('Delete this category? This action cannot be undone.')) return
     try {
       const r = await fetch(`${API_BASE_URL}/categories/${id}`, { method: 'DELETE' })
       const data = await r.json()
       if (!r.ok) throw new Error(data.detail || 'Failed to delete category')
-      setNotification('Category deleted')
+      setNotification('Category deleted.')
       if (editingCategory?.id === id) handleCancelEdit()
       fetchCategories()
     } catch (err) {
@@ -267,7 +267,7 @@ function CategoriesPage() {
               <p style={{ color: '#64748b', margin: 0, fontSize: '13px', padding: '16px 20px' }}>Loading...</p>
             )}
             {!loading && categories.length === 0 && (
-              <p style={{ color: '#94a3b8', margin: 0, fontSize: '13px', padding: '16px 20px' }}>No categories yet. Add one using the form.</p>
+              <p style={{ color: '#94a3b8', margin: 0, fontSize: '13px', padding: '16px 20px' }}>No categories yet. Add your first one using the form on the right.</p>
             )}
 
             {!loading && categories.length > 0 && (

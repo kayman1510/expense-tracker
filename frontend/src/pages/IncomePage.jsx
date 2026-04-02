@@ -110,7 +110,7 @@ function IncomePage() {
     setError('')
     fetch(`${API_BASE_URL}/income`)
       .then(r => {
-        if (!r.ok) throw new Error('Failed to fetch income')
+        if (!r.ok) throw new Error("Couldn't load income records. Please refresh.")
         return r.json()
       })
       .then(data => {
@@ -148,8 +148,8 @@ function IncomePage() {
           notes: notes || null,
         }),
       })
-      if (!response.ok) throw new Error('Failed to create income')
-      setNotification('Income added successfully')
+      if (!response.ok) throw new Error("Couldn't save this entry. Please try again.")
+      setNotification('Income entry added.')
       setSource('')
       setAmount('')
       setIncomeDate('')
@@ -163,11 +163,11 @@ function IncomePage() {
   }
 
   const handleDelete = async (incomeId) => {
-    if (!window.confirm('Are you sure you want to delete this income entry?')) return
+    if (!window.confirm('Delete this income entry? This action cannot be undone.')) return
     try {
       const response = await fetch(`${API_BASE_URL}/income/${incomeId}`, { method: 'DELETE' })
-      if (!response.ok) throw new Error('Failed to delete income')
-      setNotification('Income deleted successfully')
+      if (!response.ok) throw new Error("Couldn't delete this entry. Please try again.")
+      setNotification('Income entry deleted.')
       fetchIncome()
     } catch (err) {
       setError(err.message)
@@ -345,7 +345,7 @@ function IncomePage() {
       <div style={{ padding: '24px 36px 56px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
 
         {notification && <p className="notification" style={{ margin: 0 }}>{notification}</p>}
-        {error         && <p style={{ margin: 0, color: '#dc2626', fontSize: '13px' }}>Error: {error}</p>}
+        {error         && <p style={{ margin: 0, color: '#dc2626', fontSize: '13px' }}>Something went wrong. Please try again.</p>}
 
         {/* ── 2. KPI tiles ──────────────────────────────────────────── */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px' }}>
@@ -415,7 +415,7 @@ function IncomePage() {
               <p style={{ color: '#64748b', margin: 0, fontSize: '13px', padding: '16px 20px' }}>Loading...</p>
             )}
             {!loading && filteredIncome.length === 0 && (
-              <p style={{ color: '#94a3b8', margin: 0, fontSize: '13px', padding: '16px 20px' }}>No income records for this period.</p>
+              <p style={{ color: '#94a3b8', margin: 0, fontSize: '13px', padding: '16px 20px' }}>No income recorded for this period.</p>
             )}
 
             {/* Data table */}
