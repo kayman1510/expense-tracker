@@ -410,14 +410,13 @@ function BudgetsPage() {
       `}</style>
 
       {/* ── 1. Header band ─────────────────────────────────────────── */}
-      <div style={{
+      <div className="page-header-band" style={{
         background: '#ffffff',
         borderTop: '1px solid rgba(0,0,0,0.07)',
         borderBottom: '1px solid #e2e8f0',
         boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
-        padding: '15px 36px',
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '24px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px' }}>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
             <h1 style={{ margin: 0, fontSize: '16px', fontWeight: '700', color: '#0f172a', letterSpacing: '-0.02em' }}>
@@ -428,7 +427,7 @@ function BudgetsPage() {
             </p>
           </div>
 
-          <div style={{
+          <div className="period-selector" style={{
             display: 'flex',
             alignItems: 'center',
             background: '#f8fafc',

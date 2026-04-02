@@ -26,13 +26,7 @@ function SummaryCards({ summary }) {
   ]
 
   return (
-    <div
-      style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(3, 1fr)',
-        gap: '20px',
-      }}
-    >
+    <div className="summary-cards-grid">
       {cards.map((card) => (
         <div
           key={card.label}

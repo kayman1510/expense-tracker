@@ -40,13 +40,7 @@ function MonthComparisonSection({ monthComparison }) {
         </p>
       </div>
 
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(3, 1fr)',
-          gap: '16px',
-        }}
-      >
+      <div className="month-comparison-grid">
         {cards.map((card) => {
           const isPositive = card.change >= 0
           const statusColor = isPositive ? '#16a34a' : '#dc2626'

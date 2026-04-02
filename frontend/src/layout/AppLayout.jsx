@@ -4,13 +4,14 @@ import { NavLink, Outlet } from 'react-router-dom'
 function AppLayout() {
   const [hoveredNav, setHoveredNav] = useState(null)
 
-  // Curried: getNavLinkStyle(id) returns the function NavLink expects
   const getNavLinkStyle = (id) => ({ isActive }) => ({
     padding: '6px 12px',
     borderRadius: '6px',
     textDecoration: 'none',
     fontSize: '13px',
     fontWeight: isActive ? '600' : '400',
+    whiteSpace: 'nowrap',
+    flexShrink: 0,
     color: isActive
       ? '#ffffff'
       : hoveredNav === id ? 'rgba(255,255,255,0.72)' : 'rgba(255,255,255,0.42)',
@@ -31,25 +32,63 @@ function AppLayout() {
   return (
     <div style={{ minHeight: '100vh', backgroundColor: '#f1f5f9' }}>
 
+      {/*
+        [CHANGED] Responsive nav styles:
+        - Desktop: single row, 48px height, 36px horizontal padding
+        - <=640px: column layout, brand on first row, nav on second row,
+          reduced padding, auto height
+      */}
+      <style>{`
+        .app-nav-bar {
+          padding: 0 36px;
+          height: 48px;
+          flex-direction: row;
+          align-items: center;
+        }
+        .app-nav-bar .app-nav-links {
+          width: auto;
+        }
+        @media (max-width: 640px) {
+          .app-nav-bar {
+            padding: 10px 16px;
+            height: auto;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 6px;
+          }
+          .app-nav-bar .app-nav-links {
+            width: 100%;
+          }
+        }
+      `}</style>
+
       {/* Top navigation bar */}
-      <div style={{
+      <div className="app-nav-bar" style={{
         background: '#0f172a',
         borderBottom: '1px solid rgba(255,255,255,0.06)',
-        padding: '0 36px',
         display: 'flex',
-        alignItems: 'center',
         justifyContent: 'space-between',
-        height: '48px',
+        gap: '8px',
       }}>
 
-        {/* Brand wordmark — "Expense" white 700, "Tracker" blue 700 */}
-        <span style={{ display: 'inline-flex', alignItems: 'baseline', gap: '4px', letterSpacing: '-0.02em' }}>
+        {/* Brand wordmark */}
+        <span style={{
+          display: 'inline-flex',
+          alignItems: 'baseline',
+          gap: '4px',
+          letterSpacing: '-0.02em',
+          flexShrink: 0,
+        }}>
           <span style={{ fontSize: '16px', fontWeight: '700', color: '#f1f5f9' }}>Expense</span>
           <span style={{ fontSize: '16px', fontWeight: '700', color: '#3b82f6' }}>Tracker</span>
         </span>
 
-        {/* Nav links with hover */}
-        <nav style={{ display: 'flex', gap: '2px' }}>
+        {/* Nav links */}
+        <nav className="app-nav-links" style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: '2px',
+        }}>
           {navLinks.map(({ to, label, id, end }) => (
             <NavLink
               key={id}

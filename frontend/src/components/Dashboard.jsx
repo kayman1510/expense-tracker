@@ -65,18 +65,18 @@ function Dashboard() {
     <div style={{ background: '#f1f5f9', minHeight: '100%' }}>
 
       {/* ── Header band ─────────────────────────────────────────────── */}
-      <div style={{
+      <div className="page-header-band" style={{
         background: '#ffffff',
         borderTop: '1px solid rgba(0,0,0,0.07)',
         borderBottom: '1px solid #e2e8f0',
         boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
-        padding: '15px 36px',
       }}>
         <div style={{
           display: 'flex',
           alignItems: 'flex-start',
           justifyContent: 'space-between',
-          gap: '24px',
+          flexWrap: 'wrap',
+          gap: '12px',
         }}>
 
           {/* Left: title + period subtitle */}
@@ -96,8 +96,8 @@ function Dashboard() {
           </div>
 
           {/* Right: period pill + today date */}
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '6px' }}>
-            <div style={{
+          <div className="period-controls" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '6px' }}>
+            <div className="period-selector" style={{
               display: 'flex',
               alignItems: 'center',
               background: '#f8fafc',
@@ -162,7 +162,7 @@ function Dashboard() {
         )}
 
         {!loading && !error && dashboardData && (
-          <div style={{ display: 'grid', gap: '20px' }}>
+          <div className="dashboard-content-grid">
 
             {/* Row 1: Summary cards */}
             <SummaryCards summary={dashboardData.summary} />
