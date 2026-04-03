@@ -1,4 +1,5 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
+from typing import Optional
 
 
 class CategoryCreate(BaseModel):
@@ -128,4 +129,28 @@ class DashboardResponse(BaseModel):
     category_spending: list[CategorySpendingItem]
     budget_status: list[BudgetVsActualItem]
     month_comparison: MonthOverMonthResponse
-    
+
+
+# ── Auth models ───────────────────────────────────────────────────────
+
+class UserRegister(BaseModel):
+    email: EmailStr
+    password: str
+    full_name: Optional[str] = None
+
+
+class UserLogin(BaseModel):
+    email: EmailStr
+    password: str
+
+
+class UserResponse(BaseModel):
+    id: int
+    email: EmailStr
+    full_name: Optional[str]
+    created_at: str
+
+
+class TokenResponse(BaseModel):
+    access_token: str
+    token_type: str

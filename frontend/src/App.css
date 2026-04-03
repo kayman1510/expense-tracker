@@ -719,3 +719,62 @@ tr:nth-child(even) td {
     grid-template-columns: 1fr;
   }
 }
+
+/* ── Login page layout ───────────────────────────────────────────── */
+.lp-layout {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.lp-form-panel {
+  width: 40%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 48px 40px;
+  background: #ffffff;
+  overflow-y: auto;
+  flex-shrink: 0;
+  border-right: 1px solid rgba(0,0,0,0.06);
+  box-shadow: 4px 0 12px rgba(0,0,0,0.04);
+}
+
+.lp-brand-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 64px 56px 48px;
+  background:
+    radial-gradient(ellipse at 82% 8%,  rgba(99,102,241,0.38) 0%, transparent 42%),
+    radial-gradient(ellipse at 18% 88%, rgba(37,99,235,0.32)  0%, transparent 48%),
+    linear-gradient(150deg, #0c1220 0%, #18306e 52%, #1d4ed8 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.lp-form-inner {
+  width: 100%;
+  max-width: 400px;
+}
+
+.lp-brand-inner {
+  width: 100%;
+  max-width: 440px;
+  text-align: left;
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 768px) {
+  .lp-form-panel {
+    width: 100%;
+    padding: 40px 24px;
+  }
+  .lp-brand-panel {
+    display: none;
+  }
+}
